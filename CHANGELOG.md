@@ -4,6 +4,13 @@ Toutes les modifications notables de Tama sont consignées ici.
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 Versionnage sémantique.
 
+## [Non publié]
+
+### Ajouté
+- Brief de conception `TAMA-START.md` versionné à la racine du repo (copie de
+  référence ; le dossier Drive ne garde que le breadcrumb `WHERE-IS-THE-CODE.md`).
+- Plan complet de la phase 1 gravé dans `HANDOFF.md` §6 (6 étapes, décisions actées).
+
 ## [0.1.0] — Étape 0 : squelette du dépôt
 
 ### Ajouté

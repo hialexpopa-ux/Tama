@@ -1,8 +1,9 @@
 # CLAUDE.md — Tama (instructions permanentes, lues à chaque session)
 
 > App **autonome** (repo `C:\dev\Tama`, hors Drive/OneDrive, sauvegardée sur GitHub).
-> Le brief de conception complet vit dans `TAMA-START.md` du dossier Drive
-> `g:\My Drive\CodexApps\Tama` — le consulter pour le détail des mécaniques P1.
+> Le brief de conception complet est versionné à la racine du repo :
+> **[`TAMA-START.md`](TAMA-START.md)** — le consulter pour le détail des mécaniques P1.
+> (Le dossier Drive `g:\My Drive\CodexApps\Tama` ne garde qu'un breadcrumb pointant ici.)
 
 ## Passation entre sessions
 

@@ -19,12 +19,12 @@ des commits **après** → répare-le (reconstruis l'état manquant depuis
 > vert ; (3) **mets ce doc à jour dans le même commit** que le code.
 >
 > ⚠️ **Emplacement du vrai repo : `C:\dev\Tama`** (hors Drive/OneDrive, poussé sur
-> GitHub `hialexpopa-ux/Tama`). Le brief de conception `TAMA-START.md` vit
-> **ailleurs**, dans `g:\My Drive\CodexApps\Tama` (dossier Drive, non versionné avec
-> le code) — le consulter pour le détail des mécaniques P1, mais **coder ici**.
+> GitHub `hialexpopa-ux/Tama`). Le brief de conception **`TAMA-START.md` est
+> versionné à la racine du repo** (le dossier Drive `g:\My Drive\CodexApps\Tama`
+> ne garde qu'un breadcrumb `WHERE-IS-THE-CODE.md` pointant ici).
 >
 > Réf permanente (ne se périme pas comme ce handoff) : `TAMA-START.md` (brief de
-> conception complet, dans le dossier Drive) + `CLAUDE.md` (conventions).
+> conception complet, racine du repo) + `CLAUDE.md` (conventions).
 
 ## 1. Ce qu'est l'app
 
@@ -37,7 +37,7 @@ l'écran d'accueil »). Le **moteur** (`src/tama.js`) est du **pur calcul d'éta
 phase 1, **Firebase** en phase 2 (couche partagée → un seul pet vécu partout ;
 **Drive n'intervient jamais dans la synchro**).
 
-Mécaniques P1 (détail complet dans `TAMA-START.md`, dossier Drive) : 2 compteurs de
+Mécaniques P1 (détail complet dans `TAMA-START.md`, racine du repo) : 2 compteurs de
 **4 cœurs** (faim/bonheur), **discipline** par paliers 0/25/50/75/100, **poids**,
 **care mistakes cachés** (fenêtre 15 min) qui pilotent l'évolution œuf→bébé→enfant→
 ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat hors-P1.**
@@ -75,7 +75,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
   versions de libs, quirks Android, capacités navigateur) → **ne pas deviner**,
   faire relayer une question précise à « Claude-avec-internet », puis appliquer.
 - **Git** : travail direct sur `main`, **Conventional Commits**, une intention à la
-  fois, finis par `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`.
+  fois, finis par le trailer `Co-Authored-By` du **modèle courant** (aujourd'hui
+  `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`).
   **GitHub = seule sauvegarde de l'historique** (repo hors-Drive) → pousser après
   chaque commit substantiel.
 
@@ -83,20 +84,39 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(à venir)_ | Étape 1 : moteur `tama.js` + `constants.js` |
+| _(ce commit)_ | Docs : brief `TAMA-START.md` versionné dans le repo, plan de phase 1 gravé ici |
+| `8f70f00` | Mécanisme universel de passation (HANDOFF.md + renvoi CLAUDE.md + hook global) |
 | `4be0377` | Étape 0 : squelette du dépôt (CLAUDE.md, CHANGELOG 0.1.0, README, .gitignore) |
 
-## 6. État courant & directions
+## 6. État courant & plan de phase 1 (validé par Alex, 2026-07-01)
 
-**Étape 0 terminée** : repo neuf `C:\dev\Tama` (hors Drive), docs fraîches, premier
-commit `4be0377` poussé sur GitHub (privé). Mécanisme de passation installé (ce doc
-+ section « Passation » de `CLAUDE.md`).
+**Étape 0 terminée**, plan complet validé (« documente tout et puis suis ton plan »).
+Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
 
-**Prochaine étape = 1 (moteur)** : `src/tama.js` + `src/constants.js` — moteur pur
-fidèle P1 (état sérialisable §3 du brief, actions pures, `tick` à horloge/aléatoire
-injectés, sous-pas 15 min, plafond 12 h), **testable en Node sans UI**, avec un petit
-script de test pour valider faim/bonheur, discipline, care mistakes, évolution.
+1. **Moteur** — `src/constants.js` (2 jeux de valeurs Officiel/Dev, sélecteur `MODE`,
+   **défaut = Dev**) + `src/tama.js` (état §3 du brief, `createEgg`, `tick` sous-pas
+   15 min / plafond 12 h, actions pures, `summary`, `rand` seedé injecté) +
+   `test/tama.test.js` (Node pur, sans framework : vies simulées — bien soigné →
+   adulte rang 1, négligé → mort ; care mistakes, discipline, poids, maladie,
+   plafond de rattrapage, déterminisme par seed).
+2. **Store** — `src/store.js`, interface `load()/save()`, impl localStorage
+   (état minuscule, pas besoin d'IndexedDB). Couture Firebase de la phase 2.
+3. **UI** — `index.html` + `src/ui.js` + `src/game.js` : cœurs, 7 icônes P1
+   (Repas, Lumière, Jouer, Médicament, Nettoyer, Santé, Discipline), check meter
+   (sans les care mistakes cachés), mini-jeu gauche/droite 5 manches, un seul
+   `setInterval` propriétaire du tick + rattrapage au chargement. Placeholders.
+4. **Art** — `src/assets.js` + `assets/manifest.json` (slots §6 du brief,
+   fallback placeholder, `image-rendering: pixelated`). Alex dépose ses PNG
+   librement ensuite.
+5. **PWA** — `manifest.webmanifest` + `sw.js`. ⚠️ **Règle de relais obligatoire** :
+   questions précises à Claude-avec-internet (manifest minimal Android 2026,
+   pattern service worker + stratégie de mise à jour du cache) AVANT de coder.
+6. **Hébergement + Andy lanceur** — publier à une URL https (choix d'hébergeur à
+   trancher avec Alex : GitHub Pages / Netlify / Firebase Hosting), puis action
+   « ouvrir l'URL » côté Andy.
 
-_Directions possibles quand on reprend : (a) attaquer le moteur (recommandé) ;
-(b) d'abord poser `constants.js` avec les deux jeux de valeurs (Officiel/Dev) ;
-(c) esquisser l'interface `store` avant le moteur._
+**Phase 2 (plus tard)** : `store.js` → Firebase, horloge serveur, un seul pet partout.
+
+_Décisions actées : brief versionné dans le repo (copie Drive = breadcrumb seul) ;
+`WHERE-IS-THE-CODE.md` retiré du repo (il appartient au Drive) ; mode **Dev** par
+défaut dans `constants.js` (éclosion 30 s, stades courts), l'Officiel à un flag près._
