@@ -7,6 +7,9 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Étape 5 — PWA installable** : `manifest.webmanifest` (192/512 + maskable),
+  `sw.js` (précache, cache versionné, stale-while-revalidate), enregistrement
+  dans `ui.js`, icônes générées par `tools/make-icons.mjs` (Node pur).
 - **Étape 4 — art remplaçable** : `src/assets.js` (`loadArt` : manifeste →
   URLs, repli placeholder) + `assets/manifest.json` (slots stages/overlays/
   icons) + `assets/sprites/README.md`. `ui.js` rend chaque slot en PNG si

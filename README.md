@@ -34,7 +34,7 @@ Puis ouvrir `http://localhost:8000`.
 Pour tester le **moteur** seul (sans UI), en Node :
 
 ```bash
-node src/tama.js
+npm test
 ```
 
 ## Installer comme PWA

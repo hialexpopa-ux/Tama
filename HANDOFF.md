@@ -86,7 +86,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Étape 4 : art via manifeste (`assets.js` + `assets/manifest.json`, repli émoji) |
+| _(ce commit)_ | Étape 5 : PWA (`manifest.webmanifest` + `sw.js` SWR + icônes générées) |
+| `b63bc44` | Étape 4 : art via manifeste (`assets.js` + `assets/manifest.json`, repli émoji) |
 | `1156a8e` | Étape 3 : UI jouable (`index.html` + `ui.js` + `game.js`, placeholders émoji) |
 | `6289047` | Étape 2 : `store.js` (interface async load/save/clear, impl localStorage) + 5 tests |
 | `ec273eb` | Étape 1 : moteur pur `tama.js` + `constants.js` + 26 tests Node (verts en dev ET official) |
@@ -133,12 +134,27 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    helper `face()` = PNG si dispo, sinon émoji — fichier introuvable mémorisé
    (pas de clignotement), donc **manifeste/slot/PNG manquant = placeholder,
    jamais de crash**. Alex peut déposer ses PNG à tout moment.
-5. **PWA** — `manifest.webmanifest` + `sw.js`. ⚠️ **Règle de relais obligatoire** :
-   questions précises à Claude-avec-internet (manifest minimal Android 2026,
-   pattern service worker + stratégie de mise à jour du cache) AVANT de coder.
+5. ✅ **PWA** (fait, ce commit) — relais effectué le 2026-07-01 **avec les outils
+   web de l'assistant** (MDN « Making PWAs installable » + web.dev
+   « install-criteria ») : installabilité Chrome = manifest (`name`,
+   `start_url`, `display: standalone`, icônes réelles **192 + 512 px**) + HTTPS ;
+   le service worker n'est **plus requis** pour installer, mais nécessaire pour
+   l'offline. Livré : `manifest.webmanifest` (+ icône maskable), `sw.js`
+   (précache du shell, cache versionné `tama-v1` purgé à l'activation, fetch en
+   **stale-while-revalidate** → maj au rechargement suivant sans build),
+   `<link rel="manifest">` + enregistrement SW dans `ui.js`,
+   `tools/make-icons.mjs` (génère les PNG d'icône en Node pur, zéro dépendance —
+   remplaçables par ceux d'Alex dans `assets/icons/`).
 6. **Hébergement + Andy lanceur** — publier à une URL https (choix d'hébergeur à
    trancher avec Alex : GitHub Pages / Netlify / Firebase Hosting), puis action
    « ouvrir l'URL » côté Andy.
+
+**Reste à faire** : (a) **tester une vie complète dans un vrai navigateur**
+(`npx serve .`, mode dev : éclosion 30 s, adulte en ~30 min) — le smoke-test Node
+ne remplace pas un œil humain ; (b) **étape 6** : choix d'hébergement à trancher
+par Alex (le repo GitHub est privé → Pages exigerait de le rendre public ;
+Netlify/Firebase Hosting marchent en privé), puis Andy-lanceur ; (c) les PNG
+d'Alex (sprites + icônes) quand il veut.
 
 **Phase 2 (plus tard)** : `store.js` → Firebase, horloge serveur, un seul pet partout.
 

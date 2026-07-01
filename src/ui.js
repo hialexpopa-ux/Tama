@@ -212,6 +212,14 @@ async function boot() {
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) tickNow();
   });
+
+  // PWA : service worker pour l'offline (indisponible en file:// ou vieux
+  // navigateur → l'app marche quand même, juste sans cache hors-ligne).
+  try {
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+  } catch (e) {
+    console.warn('[tama] service worker non enregistré :', e);
+  }
 }
 
 boot();

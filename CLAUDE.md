@@ -83,6 +83,6 @@ puis **appliquer** la réponse. (Alex fait le pont, ou l'assistant utilise ses o
   canonique + horloge serveur passée à `tick`, actions atomiques poussées par chaque client).
 
 **Suivi de l'avancement détaillé : voir [`HANDOFF.md`](HANDOFF.md)** (état vivant,
-mis à jour à chaque commit). Étapes 0-4 terminées (moteur + tests, store, UI, art
-via manifeste) ; suivante = étape 5 (PWA : `manifest.webmanifest` + `sw.js`,
-**relais obligatoire** avant de coder).
+mis à jour à chaque commit). Étapes 0-5 terminées (moteur + tests, store, UI, art
+via manifeste, PWA) ; suivante = étape 6 (hébergement https — choix d'Alex — puis
+Andy lanceur), après un test navigateur d'une vie complète.
