@@ -162,13 +162,16 @@ l'app s'affiche) et **installation desktop OK** (fenêtre autonome, icône œuf)
 **En ligne le même jour : <https://hialexpopa-ux.github.io/Tama/>** (GitHub
 Pages, repo public — chaque `git push` sur `main` redéploie tout seul).
 
+**Android (2026-07-01)** : l'URL Pages **s'ouvre et marche sur le téléphone
+d'Alex** ✅ — reste à confirmer l'« Ajouter à l'écran d'accueil » (icône œuf +
+plein écran + offline).
+
 **Reste à faire** : (a) observer une **vie complète** en mode dev (éclosion 30 s
-→ adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) tester
-l'**installation Android** (« Ajouter à l'écran d'accueil » sur l'URL Pages) ;
-(c) **Andy lanceur** (dans le repo d'Andy : ouvrir l'URL, ne jamais calculer) ;
-(d) les PNG d'Alex (sprites + icônes) quand il veut. ⚠️ Rappel : pets **distincts**
-par appareil/navigateur tant que la phase 2 (Firebase) n'existe pas — l'installé
-local (`localhost`) et l'app en ligne ont chacun leur pet.
+→ adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) confirmer
+l'installation Android à l'écran d'accueil ; (c) **Andy lanceur** (dans le repo
+d'Andy : ouvrir l'URL, ne jamais calculer) ; (d) les PNG d'Alex (sprites +
+icônes) quand il veut. ⚠️ Rappel : pets **distincts** par appareil/navigateur
+tant que la phase 2 (Firebase) n'existe pas.
 
 **Phase 2 (plus tard)** : `store.js` → Firebase, horloge serveur, un seul pet partout.
 
