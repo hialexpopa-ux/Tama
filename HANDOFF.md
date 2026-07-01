@@ -86,7 +86,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Étape 2 : `store.js` (interface async load/save/clear, impl localStorage) + 5 tests |
+| _(ce commit)_ | Étape 3 : UI jouable (`index.html` + `ui.js` + `game.js`, placeholders émoji) |
+| `6289047` | Étape 2 : `store.js` (interface async load/save/clear, impl localStorage) + 5 tests |
 | `ec273eb` | Étape 1 : moteur pur `tama.js` + `constants.js` + 26 tests Node (verts en dev ET official) |
 | `29e50c5` | Docs : brief `TAMA-START.md` versionné dans le repo, plan de phase 1 gravé ici |
 | `8f70f00` | Mécanisme universel de passation (HANDOFF.md + renvoi CLAUDE.md + hook global) |
@@ -113,10 +114,17 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    `null` (œuf neuf, jamais de crash). 5 tests (`test/store.test.js`, faux
    localStorage). `npm test` lance les deux suites : 31 tests, dernière valeur
    connue 31/31.
-3. **UI** — `index.html` + `src/ui.js` + `src/game.js` : cœurs, 7 icônes P1
-   (Repas, Lumière, Jouer, Médicament, Nettoyer, Santé, Discipline), check meter
-   (sans les care mistakes cachés), mini-jeu gauche/droite 5 manches, un seul
-   `setInterval` propriétaire du tick + rattrapage au chargement. Placeholders.
+3. ✅ **UI** (fait, ce commit) — `index.html` (coquille + CSS inline, 7 icônes
+   P1 : Repas→sous-menu repas/friandise, Lumière, Jouer, Médicament, Nettoyer,
+   Santé, Discipline) + `src/ui.js` (boot, ticker unique 5 s + rattrapage au
+   chargement/`visibilitychange`, rendu par `summary()`, refus = shake, check
+   meter sans care mistakes, écran de mort → nouvel œuf) + `src/game.js`
+   (mini-jeu gauche/droite 5 manches → `play(state, wins)`). Placeholders émoji
+   en attendant l'étape 4. Moteur : ajout `toLocalIso` (convention ISO locale
+   sans Z) et `canPlay` (prédicat exporté, pas de règle dupliquée dans l'UI).
+   Vérifié : `node --check`, 31 tests verts, smoke-test du boot en Node (DOM
+   factice, clics sur les 7 boutons). **Pas encore testé dans un vrai
+   navigateur** → à faire : `npx serve .` puis jouer une vie en mode dev.
 4. **Art** — `src/assets.js` + `assets/manifest.json` (slots §6 du brief,
    fallback placeholder, `image-rendering: pixelated`). Alex dépose ses PNG
    librement ensuite.

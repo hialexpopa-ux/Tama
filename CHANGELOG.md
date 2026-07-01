@@ -7,6 +7,11 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Étape 3 — UI jouable** : `index.html` (coquille 7 icônes P1, CSS inline) +
+  `src/ui.js` (ticker unique + rattrapage, rendu, modals repas/santé/mort) +
+  `src/game.js` (mini-jeu gauche/droite 5 manches). Placeholders émoji.
+  Moteur : exports `toLocalIso` et `canPlay` ; store : `save()` ne plante
+  jamais (quota/mode privé).
 - **Étape 2 — store** : `src/store.js` (`createLocalStore` : interface async
   `load()/save()/clear()`, impl localStorage, corruption → `null`) + 5 tests
   (`test/store.test.js`) ; `npm test` enchaîne les deux suites (31 tests).

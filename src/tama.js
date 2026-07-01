@@ -78,6 +78,15 @@ export function createEgg(nowIso, name = 'Tama') {
 // ——— Helpers purs ———
 function localHour(ms) { return new Date(ms).getHours(); }
 
+// Convention d'horloge du moteur : ISO en heure LOCALE, sans suffixe Z.
+// Exporté pour que l'UI et les tests fabriquent leurs nowIso pareil.
+export function toLocalIso(ms) {
+  const d = new Date(ms);
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}` +
+    `T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
 function isSleepHour(stage, hour) {
   const w = C.sleep[stage];
   if (!w) return false; // l'œuf ne dort pas
@@ -352,11 +361,17 @@ export function feed(state, kind /* 'meal' | 'snack' */) {
   });
 }
 
+// Le pet accepte-t-il de jouer ? (exporté pour que l'UI n'ouvre pas le mini-jeu
+// pour rien, sans dupliquer la règle chez elle)
+export function canPlay(state) {
+  return state.alive && !state.flags.asleep && !state.flags.sick
+    && !state.flags.misbehaving && state.stage !== 'egg';
+}
+
 // wins = manches gagnées sur C.gameRounds (le mini-jeu vit dans l'UI, game.js)
 export function play(state, wins) {
   return mutate(state, (s) => {
-    if (!s.alive || s.flags.asleep || s.flags.sick || s.flags.misbehaving) return false;
-    if (s.stage === 'egg') return false;
+    if (!canPlay(s)) return false;
     s.care.games += 1;
     s.weight = Math.max(C.baseWeight[s.stage] ?? 0, s.weight - C.weight.playLoss);
     if (wins >= C.gameWinsForHeart) s.happiness = Math.min(C.heartsMax, s.happiness + 1);

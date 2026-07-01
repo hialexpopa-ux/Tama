@@ -26,7 +26,12 @@ export function createLocalStore(storage = globalThis.localStorage) {
       }
     },
     async save(state) {
-      storage.setItem(KEY, JSON.stringify(state));
+      try {
+        storage.setItem(KEY, JSON.stringify(state));
+      } catch (e) {
+        // Quota plein / mode privé : on ne fait jamais planter l'app pour ça.
+        console.warn('[tama] sauvegarde impossible :', e);
+      }
     },
     async clear() {
       storage.removeItem(KEY);

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e8556d" />
+  <title>Tama</title>
+  <style>
+    :root {
+      --shell: #e8556d;
+      --shell-dark: #c23a52;
+      --lcd: #c7d4a1;
+      --lcd-night: #2a3324;
+      --pixel: #24331d;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { height: 100%; }
+    body {
+      background: #1d1f27;
+      color: var(--pixel);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      display: grid;
+      place-items: center;
+      min-height: 100dvh;
+      padding: 12px;
+      user-select: none;
+    }
+    #device {
+      background: var(--shell);
+      border-radius: 46% 46% 42% 42% / 38% 38% 42% 42%;
+      padding: 30px 24px 26px;
+      width: min(420px, 96vw);
+      box-shadow: inset 0 -10px 0 var(--shell-dark), 0 14px 34px rgba(0, 0, 0, .5);
+    }
+    .icon-row { display: flex; justify-content: space-around; padding: 10px 4px; }
+    .icon-row button {
+      font-size: 22px;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--shell-dark);
+      cursor: pointer;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, .35);
+      transition: transform .05s;
+    }
+    .icon-row button:active { transform: translateY(2px); box-shadow: none; }
+    .icon-row button.lit { outline: 3px solid #ffd166; }
+
+    #screen {
+      position: relative;
+      background: var(--lcd);
+      border: 10px solid #2e2e38;
+      border-radius: 16px;
+      aspect-ratio: 1 / 0.95;
+      overflow: hidden;
+      image-rendering: pixelated;
+      font-family: "Courier New", monospace;
+    }
+    #screen.night { background: var(--lcd-night); color: #9fb08a; }
+    #screen.refused { animation: shake .25s; }
+    @keyframes shake {
+      25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+    }
+
+    #hearts {
+      position: absolute; top: 6px; left: 8px;
+      font-size: 13px; line-height: 1.35; letter-spacing: 1px;
+    }
+    #attention {
+      position: absolute; top: 6px; right: 10px;
+      font-size: 22px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    #pet-area { position: absolute; inset: 0; display: grid; place-items: center; }
+    #pet { font-size: 72px; line-height: 1; animation: bob 1.2s steps(2) infinite; }
+    #pet img { width: 96px; height: 96px; image-rendering: pixelated; display: block; }
+    @keyframes bob { 50% { transform: translateY(-6px); } }
+    #screen.still #pet { animation: none; }
+
+    #pet-status { position: absolute; top: 24%; right: 16%; font-size: 26px; }
+    #poop { position: absolute; bottom: 10%; right: 12%; font-size: 30px; }
+    #light-warning {
+      position: absolute; top: 10%; left: 12%; font-size: 24px;
+      animation: blink .6s steps(1) infinite;
+    }
+
+    #modal {
+      position: absolute; inset: 0;
+      background: var(--lcd);
+      display: grid; place-items: center;
+      text-align: center;
+      padding: 14px;
+      z-index: 2;
+    }
+    #modal.hidden { display: none; }
+    #modal h2 { font-size: 17px; margin-bottom: 10px; }
+    #modal .big { font-size: 56px; margin: 8px 0; }
+    #modal .row { display: flex; gap: 12px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+    #modal button {
+      font-size: 16px;
+      font-family: inherit;
+      padding: 10px 16px;
+      border: 2px solid var(--pixel);
+      border-radius: 8px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+    #modal button:active { background: rgba(0, 0, 0, .12); }
+    #modal .meter-line { font-size: 15px; margin: 3px 0; }
+    #mode-badge {
+      position: absolute; bottom: 4px; left: 8px;
+      font-size: 10px; opacity: .55; z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <main id="device">
+    <div class="icon-row">
+      <button id="btn-feed" title="Repas">🍚</button>
+      <button id="btn-light" title="Lumière">💡</button>
+      <button id="btn-play" title="Jouer">🎮</button>
+      <button id="btn-medicine" title="Médicament">💊</button>
+    </div>
+
+    <section id="screen">
+      <div id="hearts"></div>
+      <div id="attention"></div>
+      <div id="pet-area">
+        <div id="pet"></div>
+        <div id="pet-status"></div>
+        <div id="poop"></div>
+        <div id="light-warning"></div>
+      </div>
+      <div id="mode-badge"></div>
+      <div id="modal" class="hidden"></div>
+    </section>
+
+    <div class="icon-row">
+      <button id="btn-clean" title="Nettoyer">🧹</button>
+      <button id="btn-meter" title="Santé (check meter)">📟</button>
+      <button id="btn-discipline" title="Discipline">📢</button>
+    </div>
+  </main>
+  <script type="module" src="src/ui.js"></script>
+</body>
+</html>
