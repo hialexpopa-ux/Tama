@@ -46,10 +46,11 @@ ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat
 
 ```powershell
 # Tester le moteur en Node (aucune UI, zéro dépendance)
-npm test             # = node test/tama.test.js — 26 tests, mode dev ET official
+npm test             # 26 tests moteur + 5 tests store, mode dev ET official
 
 # Servir la PWA en local (service worker + Firebase impossibles en file://)
-npx serve .          # ou : python -m http.server 8000  → http://localhost:8000
+npm start            # = node tools/serve.mjs  → http://localhost:8000
+                     # (pas de Python sur la machine ; npx serve marche aussi)
 ```
 
 _Le `package.json` n'existe que pour `"type": "module"` (ESM en Node) et le script
@@ -86,7 +87,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Étape 5 : PWA (`manifest.webmanifest` + `sw.js` SWR + icônes générées) |
+| _(ce commit)_ | `npm start` : mini serveur statique de dev (`tools/serve.mjs`, zéro dépendance) |
+| `1f6c260` | Étape 5 : PWA (`manifest.webmanifest` + `sw.js` SWR + icônes générées) |
 | `b63bc44` | Étape 4 : art via manifeste (`assets.js` + `assets/manifest.json`, repli émoji) |
 | `1156a8e` | Étape 3 : UI jouable (`index.html` + `ui.js` + `game.js`, placeholders émoji) |
 | `6289047` | Étape 2 : `store.js` (interface async load/save/clear, impl localStorage) + 5 tests |
