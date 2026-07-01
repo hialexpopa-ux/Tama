@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Tamagotchi P1 fidèle (Bandai Gen 1) en PWA vanilla — zéro dépendance, zéro build. package.json = métadonnée Node uniquement (ESM pour les tests).",
   "scripts": {
+    "start": "node tools/serve.mjs",
     "test": "node test/tama.test.js && node test/store.test.js"
   }
 }
