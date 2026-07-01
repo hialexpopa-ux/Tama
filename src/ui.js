@@ -183,6 +183,12 @@ function startGame() {
 
 // ——— Boot ———
 async function boot() {
+  // Raccourci de test : ouvrir l'app avec ?reset repart d'un œuf neuf
+  // (ex. http://localhost:8000/?reset) — évite de fouiller les DevTools.
+  if (new URLSearchParams(location.search).has('reset')) {
+    await store.clear();
+    history.replaceState(null, '', location.pathname); // retire ?reset de l'URL
+  }
   state = (await store.load()) ?? T.createEgg(T.toLocalIso(Date.now()));
   await store.save(state);
   art = await loadArt();

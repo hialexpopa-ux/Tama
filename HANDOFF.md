@@ -51,6 +51,7 @@ npm test             # 26 tests moteur + 5 tests store, mode dev ET official
 # Servir la PWA en local (service worker + Firebase impossibles en file://)
 npm start            # = node tools/serve.mjs  → http://localhost:8000
                      # (pas de Python sur la machine ; npx serve marche aussi)
+# Repartir d'un œuf neuf pendant les tests : http://localhost:8000/?reset
 ```
 
 _Le `package.json` n'existe que pour `"type": "module"` (ESM en Node) et le script
@@ -87,7 +88,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | `npm start` : mini serveur statique de dev (`tools/serve.mjs`, zéro dépendance) |
+| _(ce commit)_ | `?reset` dans l'URL = œuf neuf (raccourci de test sans DevTools) |
+| `dcd5295` | `npm start` : mini serveur statique de dev (`tools/serve.mjs`, zéro dépendance) |
 | `1f6c260` | Étape 5 : PWA (`manifest.webmanifest` + `sw.js` SWR + icônes générées) |
 | `b63bc44` | Étape 4 : art via manifeste (`assets.js` + `assets/manifest.json`, repli émoji) |
 | `1156a8e` | Étape 3 : UI jouable (`index.html` + `ui.js` + `game.js`, placeholders émoji) |
