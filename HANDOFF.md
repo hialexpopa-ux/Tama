@@ -153,12 +153,15 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    trancher avec Alex : GitHub Pages / Netlify / Firebase Hosting), puis action
    « ouvrir l'URL » côté Andy.
 
-**Reste à faire** : (a) **tester une vie complète dans un vrai navigateur**
-(`npx serve .`, mode dev : éclosion 30 s, adulte en ~30 min) — le smoke-test Node
-ne remplace pas un œil humain ; (b) **étape 6** : choix d'hébergement à trancher
-par Alex (le repo GitHub est privé → Pages exigerait de le rendre public ;
-Netlify/Firebase Hosting marchent en privé), puis Andy-lanceur ; (c) les PNG
-d'Alex (sprites + icônes) quand il veut.
+**Validé par Alex (2026-07-01, navigateur réel)** : offline OK (Wi-Fi coupé →
+l'app s'affiche) et **installation desktop OK** (fenêtre autonome, icône œuf).
+
+**Reste à faire** : (a) observer une **vie complète** en mode dev (éclosion 30 s
+→ adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) **étape 6** :
+choix d'hébergement à trancher par Alex (repo GitHub privé → Pages exigerait de
+le rendre public ; Netlify/Firebase Hosting marchent en privé — Firebase prépare
+la phase 2), puis Andy-lanceur ; (c) les PNG d'Alex (sprites + icônes) quand il
+veut.
 
 **Phase 2 (plus tard)** : `store.js` → Firebase, horloge serveur, un seul pet partout.
 
