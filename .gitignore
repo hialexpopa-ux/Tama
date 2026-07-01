@@ -1,0 +1,49 @@
+# === OS ===
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+# Linux
+*~
+.directory
+.Trash-*
+
+# === Éditeurs / IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+
+# === Node (pas attendu en PWA vanilla, mais au cas où on ajoute un outil ponctuel) ===
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+package-lock.json
+
+# === Artefacts locaux de test / build accidentel ===
+dist/
+build/
+coverage/
+*.log
+.cache/
+.tmp/
+tmp/
+*.local
+
+# === Secrets / config locale (Firebase phase 2) ===
+.env
+.env.*
+firebase-config.local.js
+serviceAccount*.json
