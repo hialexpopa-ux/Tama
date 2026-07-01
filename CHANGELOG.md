@@ -7,6 +7,10 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Étape 4 — art remplaçable** : `src/assets.js` (`loadArt` : manifeste →
+  URLs, repli placeholder) + `assets/manifest.json` (slots stages/overlays/
+  icons) + `assets/sprites/README.md`. `ui.js` rend chaque slot en PNG si
+  disponible, émoji sinon — y compris fichier manquant (jamais de crash).
 - **Étape 3 — UI jouable** : `index.html` (coquille 7 icônes P1, CSS inline) +
   `src/ui.js` (ticker unique + rattrapage, rendu, modals repas/santé/mort) +
   `src/game.js` (mini-jeu gauche/droite 5 manches). Placeholders émoji.

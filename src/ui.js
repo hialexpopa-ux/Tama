@@ -6,6 +6,7 @@ import { C, MODE } from './constants.js';
 import * as T from './tama.js';
 import { createLocalStore } from './store.js';
 import { runMiniGame } from './game.js';
+import { loadArt, noArt } from './assets.js';
 
 const $ = (id) => document.getElementById(id);
 const store = createLocalStore();
@@ -15,8 +16,9 @@ const rand = T.makeRand(`ui|${Date.now()}|${Math.random()}`);
 
 let state = null;
 let modalBusy = false; // mini-jeu ou menu ouvert : le rendu ne touche pas au modal
+let art = noArt;       // remplacé par le manifeste au boot (assets.js)
 
-// Placeholders émoji : remplacés par les PNG du manifeste à l'étape 4 (assets.js).
+// Placeholders émoji : utilisés pour tout slot sans PNG (art via manifeste).
 const CHAR_FACE = {
   egg: '🥚', baby: '🐣', child: '🐥', teen_good: '🐤', teen_bad: '🐦',
   adult_1: '🐔', adult_2: '🦜', adult_3: '🦆',
@@ -30,6 +32,32 @@ const DEATH_LABEL = {
 
 const heartsRow = (n) => '♥'.repeat(n) + '♡'.repeat(C.heartsMax - n);
 
+// ——— Affichage d'un slot d'art : PNG du manifeste, sinon placeholder émoji.
+// Un fichier introuvable est mémorisé pour retomber sur l'émoji sans clignoter.
+const brokenUrls = new Set();
+function face(el, url, emoji) {
+  if (!url || brokenUrls.has(url)) {
+    if (el.dataset.src) el.dataset.src = '';
+    el.textContent = emoji;
+    return;
+  }
+  if (el.dataset.src === url) return; // déjà affiché
+  el.dataset.src = url;
+  const img = document.createElement('img');
+  img.src = url;
+  img.alt = '';
+  img.addEventListener('error', () => {
+    brokenUrls.add(url);
+    el.dataset.src = '';
+    el.textContent = emoji;
+  });
+  el.replaceChildren(img);
+}
+const clearFace = (el) => face(el, null, '');
+
+const petArt = (character) =>
+  character === 'dead' ? art.overlay('angel') : art.stage(character);
+
 // ——— Rendu ———
 function render() {
   if (!state) return;
@@ -38,10 +66,15 @@ function render() {
 
   $('hearts').innerHTML = state.stage === 'egg' || !state.alive ? '' :
     `Faim&nbsp;&nbsp;&nbsp; ${heartsRow(su.hunger)}<br>Bonheur ${heartsRow(su.happiness)}`;
-  $('attention').textContent = su.attention ? NEED_ICON[su.attention] ?? '❕' : '';
-  $('pet').textContent = CHAR_FACE[state.character] ?? '❓';
-  $('pet-status').textContent = !state.alive ? '' : state.flags.asleep ? '💤' : state.flags.sick ? '💀' : '';
-  $('poop').textContent = state.flags.poop ? '💩' : '';
+  if (su.attention) face($('attention'), art.overlay('call'), NEED_ICON[su.attention] ?? '❕');
+  else clearFace($('attention'));
+  face($('pet'), petArt(state.character), CHAR_FACE[state.character] ?? '❓');
+  if (!state.alive) clearFace($('pet-status'));
+  else if (state.flags.asleep) face($('pet-status'), art.overlay('sleep'), '💤');
+  else if (state.flags.sick) face($('pet-status'), art.overlay('sick'), '💀');
+  else clearFace($('pet-status'));
+  if (state.flags.poop) face($('poop'), art.overlay('poop'), '💩');
+  else clearFace($('poop'));
   $('light-warning').textContent = su.needsLightOff ? '💡' : '';
   $('mode-badge').textContent = `mode ${MODE}`;
   $('btn-light').classList.toggle('lit', state.flags.lightOn);
@@ -114,12 +147,13 @@ function showMeter() {
   const su = T.summary(state);
   const m = openModal(`
     <h2>Santé</h2>
-    <div class="big">${CHAR_FACE[state.character] ?? '❓'}</div>
+    <div class="big"></div>
     <p class="meter-line">Faim : ${heartsRow(su.hunger)}</p>
     <p class="meter-line">Bonheur : ${heartsRow(su.happiness)}</p>
     <p class="meter-line">Discipline : ${su.discipline}%</p>
     <p class="meter-line">Âge : ${su.ageYears} an(s) — Poids : ${su.weight}</p>
     <div class="row"><button id="m-close">Fermer</button></div>`);
+  face(m.querySelector('.big'), petArt(state.character), CHAR_FACE[state.character] ?? '❓');
   m.querySelector('#m-close').onclick = closeModal;
 }
 
@@ -127,9 +161,10 @@ function showDeath() {
   modalBusy = true;
   const m = openModal(`
     <h2>${state.name} ${DEATH_LABEL[state.deathCause] ?? 'nous a quittés.'}</h2>
-    <div class="big">👼</div>
+    <div class="big"></div>
     <p class="meter-line">Âge : ${state.ageYears} an(s)</p>
     <div class="row"><button id="d-reset">Nouvel œuf</button></div>`);
+  face(m.querySelector('.big'), art.overlay('angel'), '👼');
   m.querySelector('#d-reset').onclick = () => {
     state = T.reset(T.toLocalIso(Date.now()), state.name);
     store.save(state);
@@ -150,6 +185,17 @@ function startGame() {
 async function boot() {
   state = (await store.load()) ?? T.createEgg(T.toLocalIso(Date.now()));
   await store.save(state);
+  art = await loadArt();
+
+  // Icônes des 7 boutons : PNG du manifeste, sinon l'émoji déjà dans le HTML
+  for (const [id, slot] of [
+    ['btn-feed', 'feed'], ['btn-light', 'light'], ['btn-play', 'play'],
+    ['btn-medicine', 'medicine'], ['btn-clean', 'clean'],
+    ['btn-meter', 'meter'], ['btn-discipline', 'discipline'],
+  ]) {
+    const el = $(id);
+    face(el, art.icon(slot), el.textContent);
+  }
 
   $('btn-feed').onclick = showFeedMenu;
   $('btn-light').onclick = () => apply(T.toggleLight);

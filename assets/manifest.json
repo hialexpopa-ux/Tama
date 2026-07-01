@@ -1,0 +1,31 @@
+{
+  "stages": {
+    "egg": "sprites/egg.png",
+    "baby": "sprites/baby.png",
+    "child": "sprites/child.png",
+    "teen_good": "sprites/teen_good.png",
+    "teen_bad": "sprites/teen_bad.png",
+    "adult_1": "sprites/adult_1.png",
+    "adult_2": "sprites/adult_2.png",
+    "adult_3": "sprites/adult_3.png",
+    "adult_4": "sprites/adult_4.png",
+    "adult_5": "sprites/adult_5.png",
+    "adult_6": "sprites/adult_6.png"
+  },
+  "overlays": {
+    "poop": "sprites/poop.png",
+    "sick": "sprites/skull.png",
+    "sleep": "sprites/zzz.png",
+    "call": "sprites/heart_call.png",
+    "angel": "sprites/angel.png"
+  },
+  "icons": {
+    "feed": "sprites/ic_feed.png",
+    "light": "sprites/ic_light.png",
+    "play": "sprites/ic_play.png",
+    "medicine": "sprites/ic_medicine.png",
+    "clean": "sprites/ic_clean.png",
+    "meter": "sprites/ic_meter.png",
+    "discipline": "sprites/ic_discipline.png"
+  }
+}

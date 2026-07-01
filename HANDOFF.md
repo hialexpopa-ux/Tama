@@ -86,7 +86,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Étape 3 : UI jouable (`index.html` + `ui.js` + `game.js`, placeholders émoji) |
+| _(ce commit)_ | Étape 4 : art via manifeste (`assets.js` + `assets/manifest.json`, repli émoji) |
+| `1156a8e` | Étape 3 : UI jouable (`index.html` + `ui.js` + `game.js`, placeholders émoji) |
 | `6289047` | Étape 2 : `store.js` (interface async load/save/clear, impl localStorage) + 5 tests |
 | `ec273eb` | Étape 1 : moteur pur `tama.js` + `constants.js` + 26 tests Node (verts en dev ET official) |
 | `29e50c5` | Docs : brief `TAMA-START.md` versionné dans le repo, plan de phase 1 gravé ici |
@@ -125,9 +126,13 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    Vérifié : `node --check`, 31 tests verts, smoke-test du boot en Node (DOM
    factice, clics sur les 7 boutons). **Pas encore testé dans un vrai
    navigateur** → à faire : `npx serve .` puis jouer une vie en mode dev.
-4. **Art** — `src/assets.js` + `assets/manifest.json` (slots §6 du brief,
-   fallback placeholder, `image-rendering: pixelated`). Alex dépose ses PNG
-   librement ensuite.
+4. ✅ **Art** (fait, ce commit) — `src/assets.js` (`loadArt()` : fetch du
+   manifeste, slot → URL, `noArt` par défaut) + `assets/manifest.json`
+   (11 stages dont 6 adultes, 5 overlays, 7 icônes → `sprites/*.png`) +
+   `assets/sprites/README.md` (mode d'emploi pour Alex). Dans `ui.js` :
+   helper `face()` = PNG si dispo, sinon émoji — fichier introuvable mémorisé
+   (pas de clignotement), donc **manifeste/slot/PNG manquant = placeholder,
+   jamais de crash**. Alex peut déposer ses PNG à tout moment.
 5. **PWA** — `manifest.webmanifest` + `sw.js`. ⚠️ **Règle de relais obligatoire** :
    questions précises à Claude-avec-internet (manifest minimal Android 2026,
    pattern service worker + stratégie de mise à jour du cache) AVANT de coder.
