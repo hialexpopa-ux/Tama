@@ -88,7 +88,11 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | `?reset` dans l'URL = œuf neuf (raccourci de test sans DevTools) |
+| _(ce commit)_ | Toilettage passation : historique recalé sur les vrais hashes |
+| `cdf0918` | URL Pages validée sur le téléphone d'Alex |
+| `5807ab8` | Étape 6a : GitHub Pages activé, repo public → <https://hialexpopa-ux.github.io/Tama/> |
+| `367bcec` | Validation navigateur d'Alex : offline + installation desktop OK |
+| `c3771ab` | `?reset` dans l'URL = œuf neuf (raccourci de test sans DevTools) |
 | `dcd5295` | `npm start` : mini serveur statique de dev (`tools/serve.mjs`, zéro dépendance) |
 | `1f6c260` | Étape 5 : PWA (`manifest.webmanifest` + `sw.js` SWR + icônes générées) |
 | `b63bc44` | Étape 4 : art via manifeste (`assets.js` + `assets/manifest.json`, repli émoji) |
@@ -101,10 +105,11 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 ## 6. État courant & plan de phase 1 (validé par Alex, 2026-07-01)
 
-**Étape 0 terminée**, plan complet validé (« documente tout et puis suis ton plan »).
-Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
+**Phase 1 quasi bouclée en une session (2026-07-01)** : étapes 0 à 6a toutes
+faites, app **en ligne et validée** sur desktop + téléphone. Chaque étape =
+commit(s) Conventional + HANDOFF.md à jour dedans + push.
 
-1. ✅ **Moteur** (fait, ce commit) — `src/constants.js` (Officiel/Dev, sélecteur
+1. ✅ **Moteur** (fait, `ec273eb`) — `src/constants.js` (Officiel/Dev, sélecteur
    `MODE`, défaut Dev) + `src/tama.js` (état §3 + internes `timers`/`sickness`/
    `counted`, `createEgg`, `tick` sous-pas 15 min / plafond 12 h, actions pures
    contrat « refus = même référence », `summary`, `makeRand` seedé) +
@@ -114,13 +119,13 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    les stades (2-15 min) sont plus courts que la fenêtre de care mistake (15 min)
    → l'évolution « négligée » ne se déclenche naturellement qu'en mode official
    (les tests craftent l'état pour rester déterministes).
-2. ✅ **Store** (fait, ce commit) — `src/store.js`, `createLocalStore(storage)` :
+2. ✅ **Store** (fait, `6289047`) — `src/store.js`, `createLocalStore(storage)` :
    interface **async** `load()/save()/clear()` (pour que la bascule Firebase ne
    change rien aux appelants), impl localStorage, corruption/version inconnue →
    `null` (œuf neuf, jamais de crash). 5 tests (`test/store.test.js`, faux
    localStorage). `npm test` lance les deux suites : 31 tests, dernière valeur
    connue 31/31.
-3. ✅ **UI** (fait, ce commit) — `index.html` (coquille + CSS inline, 7 icônes
+3. ✅ **UI** (fait, `1156a8e`) — `index.html` (coquille + CSS inline, 7 icônes
    P1 : Repas→sous-menu repas/friandise, Lumière, Jouer, Médicament, Nettoyer,
    Santé, Discipline) + `src/ui.js` (boot, ticker unique 5 s + rattrapage au
    chargement/`visibilitychange`, rendu par `summary()`, refus = shake, check
@@ -131,14 +136,14 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    Vérifié : `node --check`, 31 tests verts, smoke-test du boot en Node (DOM
    factice, clics sur les 7 boutons). **Pas encore testé dans un vrai
    navigateur** → à faire : `npx serve .` puis jouer une vie en mode dev.
-4. ✅ **Art** (fait, ce commit) — `src/assets.js` (`loadArt()` : fetch du
+4. ✅ **Art** (fait, `b63bc44`) — `src/assets.js` (`loadArt()` : fetch du
    manifeste, slot → URL, `noArt` par défaut) + `assets/manifest.json`
    (11 stages dont 6 adultes, 5 overlays, 7 icônes → `sprites/*.png`) +
    `assets/sprites/README.md` (mode d'emploi pour Alex). Dans `ui.js` :
    helper `face()` = PNG si dispo, sinon émoji — fichier introuvable mémorisé
    (pas de clignotement), donc **manifeste/slot/PNG manquant = placeholder,
    jamais de crash**. Alex peut déposer ses PNG à tout moment.
-5. ✅ **PWA** (fait, ce commit) — relais effectué le 2026-07-01 **avec les outils
+5. ✅ **PWA** (fait, `1f6c260`) — relais effectué le 2026-07-01 **avec les outils
    web de l'assistant** (MDN « Making PWAs installable » + web.dev
    « install-criteria ») : installabilité Chrome = manifest (`name`,
    `start_url`, `display: standalone`, icônes réelles **192 + 512 px**) + HTTPS ;
