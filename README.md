@@ -3,6 +3,9 @@
 Un **Tamagotchi fidèle au fonctionnement officiel Bandai Gen 1 (P1, 1996-97)**, en **PWA**
 (Progressive Web App) installable sur **desktop et Android**. JS pur, sans framework ni build.
 
+**▶ Jouer : <https://hialexpopa-ux.github.io/Tama/>** (installable depuis le navigateur ;
+sur Android : menu → « Ajouter à l'écran d'accueil »)
+
 ## Le pitch
 
 Un vrai P1 : deux compteurs de 4 cœurs (**faim** et **bonheur**), une barre de **discipline**

@@ -149,19 +149,26 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    `<link rel="manifest">` + enregistrement SW dans `ui.js`,
    `tools/make-icons.mjs` (génère les PNG d'icône en Node pur, zéro dépendance —
    remplaçables par ceux d'Alex dans `assets/icons/`).
-6. **Hébergement + Andy lanceur** — publier à une URL https (choix d'hébergeur à
-   trancher avec Alex : GitHub Pages / Netlify / Firebase Hosting), puis action
-   « ouvrir l'URL » côté Andy.
+6. 🟡 **Hébergement ✅ / Andy à faire** — choix d'Alex (2026-07-01) : **GitHub
+   Pages**, repo passé en **public** (aucun secret dedans, le brief le permet).
+   Pages activé (`gh api repos/…/pages`, branche `main`, racine) → **l'app vit à
+   <https://hialexpopa-ux.github.io/Tama/>** (vérifié : tous les fichiers clés
+   répondent 200 ; les chemins relatifs partout rendent le sous-chemin `/Tama/`
+   transparent). Reste : **Andy lanceur** (action « ouvrir l'URL » — se fait dans
+   le repo d'Andy, pas ici) et le test d'installation **Android** par Alex.
 
 **Validé par Alex (2026-07-01, navigateur réel)** : offline OK (Wi-Fi coupé →
 l'app s'affiche) et **installation desktop OK** (fenêtre autonome, icône œuf).
+**En ligne le même jour : <https://hialexpopa-ux.github.io/Tama/>** (GitHub
+Pages, repo public — chaque `git push` sur `main` redéploie tout seul).
 
 **Reste à faire** : (a) observer une **vie complète** en mode dev (éclosion 30 s
-→ adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) **étape 6** :
-choix d'hébergement à trancher par Alex (repo GitHub privé → Pages exigerait de
-le rendre public ; Netlify/Firebase Hosting marchent en privé — Firebase prépare
-la phase 2), puis Andy-lanceur ; (c) les PNG d'Alex (sprites + icônes) quand il
-veut.
+→ adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) tester
+l'**installation Android** (« Ajouter à l'écran d'accueil » sur l'URL Pages) ;
+(c) **Andy lanceur** (dans le repo d'Andy : ouvrir l'URL, ne jamais calculer) ;
+(d) les PNG d'Alex (sprites + icônes) quand il veut. ⚠️ Rappel : pets **distincts**
+par appareil/navigateur tant que la phase 2 (Firebase) n'existe pas — l'installé
+local (`localhost`) et l'app en ligne ont chacun leur pet.
 
 **Phase 2 (plus tard)** : `store.js` → Firebase, horloge serveur, un seul pet partout.
 
