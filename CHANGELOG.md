@@ -7,6 +7,12 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Étape 1 — moteur pur** : `src/tama.js` (état sérialisable P1, `createEgg`,
+  `tick` à horloge/aléatoire injectés — sous-pas 15 min, plafond 12 h —, actions
+  pures `feed`/`play`/`clean`/`heal`/`scold`/`toggleLight`, `summary`, RNG seedé
+  `makeRand`) + `src/constants.js` (jeux de valeurs Officiel et Dev, `MODE=dev`
+  par défaut) + `test/tama.test.js` (26 tests Node sans framework, verts dans les
+  deux modes) + `package.json` minimal (`"type": "module"`, zéro dépendance).
 - Brief de conception `TAMA-START.md` versionné à la racine du repo (copie de
   référence ; le dossier Drive ne garde que le breadcrumb `WHERE-IS-THE-CODE.md`).
 - Plan complet de la phase 1 gravé dans `HANDOFF.md` §6 (6 étapes, décisions actées).

@@ -1,0 +1,10 @@
+{
+  "name": "tama",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tamagotchi P1 fidèle (Bandai Gen 1) en PWA vanilla — zéro dépendance, zéro build. package.json = métadonnée Node uniquement (ESM pour les tests).",
+  "scripts": {
+    "test": "node test/tama.test.js"
+  }
+}

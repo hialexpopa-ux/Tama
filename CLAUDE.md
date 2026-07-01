@@ -62,10 +62,12 @@ puis **appliquer** la réponse. (Alex fait le pont, ou l'assistant utilise ses o
 
 ## Commandes (lancement / test)
 
-- **Tester le moteur en Node** (aucune UI) : `node src/tama.js` ou un petit script de test.
+- **Tester le moteur en Node** (aucune UI) : `npm test` (= `node test/tama.test.js`,
+  zéro dépendance ; le `package.json` ne sert qu'à activer l'ESM en Node, pas de build).
 - **Servir la PWA en local** (service worker + Firebase impossibles en `file://`) :
   `npx serve .` ou `python -m http.server 8000` puis ouvrir `http://localhost:8000`.
-- *(À compléter au fur et à mesure que les fichiers existent.)*
+- ⚠️ **Piège PowerShell 5.1** : ne jamais faire de round-trip `Get-Content`/`Set-Content`
+  sur les sources (mojibake UTF-8) — passer par les outils d'édition.
 
 ## Garde-fous
 

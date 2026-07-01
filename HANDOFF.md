@@ -45,14 +45,16 @@ ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat
 ## 2. Lancer / tester
 
 ```powershell
-# Tester le moteur en Node (aucune UI) — dès que src/tama.js existe
-node src/tama.js
+# Tester le moteur en Node (aucune UI, zéro dépendance)
+npm test             # = node test/tama.test.js — 26 tests, mode dev ET official
 
 # Servir la PWA en local (service worker + Firebase impossibles en file://)
 npx serve .          # ou : python -m http.server 8000  → http://localhost:8000
 ```
 
-_(À compléter au fur et à mesure que les fichiers existent.)_
+_Le `package.json` n'existe que pour `"type": "module"` (ESM en Node) et le script
+de test — zéro dépendance, zéro build. Piège : pas de round-trip
+`Get-Content`/`Set-Content` PowerShell sur les sources (casse l'UTF-8)._
 
 ## 3. Structure cible (voir `TAMA-START.md` §2 pour le détail)
 
@@ -84,7 +86,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Docs : brief `TAMA-START.md` versionné dans le repo, plan de phase 1 gravé ici |
+| _(ce commit)_ | Étape 1 : moteur pur `tama.js` + `constants.js` + 26 tests Node (verts en dev ET official) |
+| `29e50c5` | Docs : brief `TAMA-START.md` versionné dans le repo, plan de phase 1 gravé ici |
 | `8f70f00` | Mécanisme universel de passation (HANDOFF.md + renvoi CLAUDE.md + hook global) |
 | `4be0377` | Étape 0 : squelette du dépôt (CLAUDE.md, CHANGELOG 0.1.0, README, .gitignore) |
 
@@ -93,12 +96,16 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 **Étape 0 terminée**, plan complet validé (« documente tout et puis suis ton plan »).
 Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
 
-1. **Moteur** — `src/constants.js` (2 jeux de valeurs Officiel/Dev, sélecteur `MODE`,
-   **défaut = Dev**) + `src/tama.js` (état §3 du brief, `createEgg`, `tick` sous-pas
-   15 min / plafond 12 h, actions pures, `summary`, `rand` seedé injecté) +
-   `test/tama.test.js` (Node pur, sans framework : vies simulées — bien soigné →
-   adulte rang 1, négligé → mort ; care mistakes, discipline, poids, maladie,
-   plafond de rattrapage, déterminisme par seed).
+1. ✅ **Moteur** (fait, ce commit) — `src/constants.js` (Officiel/Dev, sélecteur
+   `MODE`, défaut Dev) + `src/tama.js` (état §3 + internes `timers`/`sickness`/
+   `counted`, `createEgg`, `tick` sous-pas 15 min / plafond 12 h, actions pures
+   contrat « refus = même référence », `summary`, `makeRand` seedé) +
+   `test/tama.test.js` (26 tests, verts dans les DEUX modes ; dernière valeur
+   connue : 26/26). Choix notables : 6 adultes = qualité d'ado × rang de
+   discipline ; sommeil par horloge locale (ISO **sans** suffixe Z) ; en mode dev
+   les stades (2-15 min) sont plus courts que la fenêtre de care mistake (15 min)
+   → l'évolution « négligée » ne se déclenche naturellement qu'en mode official
+   (les tests craftent l'état pour rester déterministes).
 2. **Store** — `src/store.js`, interface `load()/save()`, impl localStorage
    (état minuscule, pas besoin d'IndexedDB). Couture Firebase de la phase 2.
 3. **UI** — `index.html` + `src/ui.js` + `src/game.js` : cœurs, 7 icônes P1
