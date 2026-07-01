@@ -86,7 +86,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Étape 1 : moteur pur `tama.js` + `constants.js` + 26 tests Node (verts en dev ET official) |
+| _(ce commit)_ | Étape 2 : `store.js` (interface async load/save/clear, impl localStorage) + 5 tests |
+| `ec273eb` | Étape 1 : moteur pur `tama.js` + `constants.js` + 26 tests Node (verts en dev ET official) |
 | `29e50c5` | Docs : brief `TAMA-START.md` versionné dans le repo, plan de phase 1 gravé ici |
 | `8f70f00` | Mécanisme universel de passation (HANDOFF.md + renvoi CLAUDE.md + hook global) |
 | `4be0377` | Étape 0 : squelette du dépôt (CLAUDE.md, CHANGELOG 0.1.0, README, .gitignore) |
@@ -106,8 +107,12 @@ Chaque étape = commit(s) Conventional + HANDOFF.md à jour dedans + push.
    les stades (2-15 min) sont plus courts que la fenêtre de care mistake (15 min)
    → l'évolution « négligée » ne se déclenche naturellement qu'en mode official
    (les tests craftent l'état pour rester déterministes).
-2. **Store** — `src/store.js`, interface `load()/save()`, impl localStorage
-   (état minuscule, pas besoin d'IndexedDB). Couture Firebase de la phase 2.
+2. ✅ **Store** (fait, ce commit) — `src/store.js`, `createLocalStore(storage)` :
+   interface **async** `load()/save()/clear()` (pour que la bascule Firebase ne
+   change rien aux appelants), impl localStorage, corruption/version inconnue →
+   `null` (œuf neuf, jamais de crash). 5 tests (`test/store.test.js`, faux
+   localStorage). `npm test` lance les deux suites : 31 tests, dernière valeur
+   connue 31/31.
 3. **UI** — `index.html` + `src/ui.js` + `src/game.js` : cœurs, 7 icônes P1
    (Repas, Lumière, Jouer, Médicament, Nettoyer, Santé, Discipline), check meter
    (sans les care mistakes cachés), mini-jeu gauche/droite 5 manches, un seul

@@ -7,6 +7,9 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Étape 2 — store** : `src/store.js` (`createLocalStore` : interface async
+  `load()/save()/clear()`, impl localStorage, corruption → `null`) + 5 tests
+  (`test/store.test.js`) ; `npm test` enchaîne les deux suites (31 tests).
 - **Étape 1 — moteur pur** : `src/tama.js` (état sérialisable P1, `createEgg`,
   `tick` à horloge/aléatoire injectés — sous-pas 15 min, plafond 12 h —, actions
   pures `feed`/`play`/`clean`/`heal`/`scold`/`toggleLight`, `summary`, RNG seedé
