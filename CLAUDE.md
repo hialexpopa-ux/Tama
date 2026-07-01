@@ -4,6 +4,17 @@
 > Le brief de conception complet vit dans `TAMA-START.md` du dossier Drive
 > `g:\My Drive\CodexApps\Tama` — le consulter pour le détail des mécaniques P1.
 
+## Passation entre sessions
+
+Ce projet utilise le mécanisme de passation. **Le protocole est défini dans le
+`CLAUDE.md` global** (lecture de `HANDOFF.md`, contrôle de fraîcheur ancré git,
+spot-check « fraîcheur ≠ exactitude », maj dans le même commit que le code) — ne pas
+le redéfinir ici. **Doc de contexte vivant : [`HANDOFF.md`](HANDOFF.md)** (racine du
+repo), à lire en entier au démarrage et à tenir à jour à chaque commit substantiel.
+
+Ce fichier (`CLAUDE.md`) porte les **conventions stables** ; `HANDOFF.md` porte
+l'**état vivant** (historique, avancement, directions).
+
 ## Objectif
 
 Un **Tamagotchi fidèle au fonctionnement officiel Bandai Gen 1 (P1, 1996-97)**, livré en
@@ -68,5 +79,6 @@ puis **appliquer** la réponse. (Alex fait le pont, ou l'assistant utilise ses o
 - **Phase 2 (plus tard)** : `store.js` pointe vers **Firebase** (autorité serveur : état
   canonique + horloge serveur passée à `tick`, actions atomiques poussées par chaque client).
 
-**Étape courante : 0 terminée** (repo + docs + premier commit + push GitHub). Suivante : étape 1
-(moteur `tama.js` + `constants.js`, testable en Node).
+**Suivi de l'avancement détaillé : voir [`HANDOFF.md`](HANDOFF.md)** (état vivant,
+mis à jour à chaque commit). Étape courante : 0 terminée ; suivante = étape 1 (moteur
+`tama.js` + `constants.js`, testable en Node).

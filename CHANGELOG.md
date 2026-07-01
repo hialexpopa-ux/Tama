@@ -14,5 +14,9 @@ Versionnage sémantique.
 - `CHANGELOG.md` (ce fichier), démarré à `0.1.0`.
 - `README.md` : pitch + démarrage.
 - `.gitignore` adapté à une PWA vanilla.
+- **Mécanisme de passation universel** : `HANDOFF.md` (doc de contexte vivant,
+  en-tête auto-suffisant + fraîcheur ancrée git) + section « Passation » dans
+  `CLAUDE.md` (renvoi au protocole global, sans le recopier). Breadcrumb
+  `WHERE-IS-THE-CODE.md` déposé côté Drive pour rediriger vers `C:\dev\Tama`.
 
 _Table rase : rien importé d'Andy._
