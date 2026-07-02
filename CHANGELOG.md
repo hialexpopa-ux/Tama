@@ -7,6 +7,9 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **`ANDY-INTEGRATION.md`** : spec pour brancher le mode `?mini` dans le widget
+  Andy (URL à charger, iframe / fenêtre flottante / `WebContentsView`, rappels
+  d'archi — Andy n'affiche que l'URL, pet local distinct). À exécuter côté Andy.
 - **Mode compact `?mini`** : ouvrir `…/Tama/?mini` retire la coque rose et les
   gros boutons, ne garde que l'écran LCD + une rangée de boutons réduits, sur
   **fond transparent** — pour glisser le Tama dans un accessoire flottant (widget

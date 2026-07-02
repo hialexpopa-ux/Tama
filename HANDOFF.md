@@ -89,7 +89,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Mode compact `?mini` : coque retirée, écran + boutons réduits, fond transparent → accessoire flottant (widget Andy) |
+| _(ce commit)_ | Doc `ANDY-INTEGRATION.md` : spec pour brancher le mode `?mini` dans le widget Andy (à faire côté repo d'Andy) |
+| `e87b452` | Mode compact `?mini` : coque retirée, écran + boutons réduits, fond transparent → accessoire flottant (widget Andy) |
 | `993cc0e` | Mise à jour auto de la PWA : bandeau « Nouvelle version — Recharger » (SW en attente + `SKIP_WAITING`) ; convention bump `CACHE_VERSION` |
 | `5f11936` | Décision : **pas de sync / Firebase / phase 2 abandonnés** — pets locaux distincts assumés (doc alignée) |
 | `2847063` | Fix cycle de vie fidèle P1 : bébé sans nuit (+ sieste official), sommeil par personnage, décroissance par stade, mode dev rééchelonné, noms français |
@@ -192,7 +193,8 @@ Glouton, Zigzag, Ronchon.
 **Reste à faire** : (a) observer une **vie complète** en mode dev (éclosion 30 s
 → adulte ~30 min : évolutions, maladie, discipline, nuit) — _en cours, Alex
 regarde_ ; (b) confirmer l'installation Android à l'écran d'accueil ; (c) **Andy
-lanceur** (dans le repo d'Andy : ouvrir l'URL, ne jamais calculer) ; (d) les PNG
+lanceur / widget « MON TAMA »** (dans le repo d'Andy : afficher l'URL `?mini`,
+ne jamais calculer — **spec prête : `ANDY-INTEGRATION.md`**) ; (d) les PNG
 d'Alex (sprites + icônes) quand il veut ; (e) **vivre une vraie partie en
 `MODE = 'official'`** (jamais éprouvé en conditions réelles, seulement en tests).
 ✅ **Mise à jour auto faite** : bandeau « Nouvelle version — Recharger » (SW en
