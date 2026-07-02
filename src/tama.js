@@ -454,3 +454,26 @@ export function summary(state) {
     ageYears: state.ageYears,
   };
 }
+
+// ——— Résumé d'absence (PUR) : diffe l'état d'AVANT le rattrapage hors-ligne et
+// celui d'APRÈS, et renvoie des FAITS structurés — jamais de texte (la
+// formulation appartient à l'UI / au thème). Hors-ligne, rien ne se résout tout
+// seul dans ce moteur (le pet ne se nourrit ni ne se soigne), donc un simple
+// diff capte l'essentiel de ce qui s'est passé pendant l'absence. Comme summary,
+// n'expose JAMAIS les care mistakes (cachés).
+export function absenceSummary(before, after) {
+  const died = before.alive && !after.alive;
+  const evolved = before.character !== after.character && after.character !== 'dead';
+  return {
+    hungerLost: Math.max(0, before.hunger - after.hunger),
+    happinessLost: Math.max(0, before.happiness - after.happiness),
+    poopNow: after.flags.poop,
+    sickNow: after.flags.sick,
+    evolvedTo: evolved ? after.character : null,
+    agedYears: Math.max(0, after.ageYears - before.ageYears),
+    asleep: after.flags.asleep,
+    misbehaving: after.flags.misbehaving,
+    died,
+    deathCause: died ? after.deathCause : null,
+  };
+}

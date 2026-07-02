@@ -47,12 +47,14 @@ ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat
 
 ```powershell
 # Tester le moteur en Node (aucune UI, zéro dépendance)
-npm test             # 28 tests moteur (29 en official) + 5 store, verts dans les DEUX modes
+npm test             # 32 tests moteur (33 en official) + 5 store, verts dans les DEUX modes
 
 # Servir la PWA en local (service worker impossible en file://)
 npm start            # = node tools/serve.mjs  → http://localhost:8000
                      # (pas de Python sur la machine ; npx serve marche aussi)
 # Repartir d'un œuf neuf pendant les tests : http://localhost:8000/?reset
+# Voir le résumé d'absence sans attendre : ...?ago=25 (recule l'horloge de 25 min ;
+#   se combine : ...?reset&ago=25). Les deux params se retirent de l'URL après coup.
 ```
 
 _Le `package.json` n'existe que pour `"type": "module"` (ESM en Node) et le script
@@ -89,7 +91,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Doc `ANDY-INTEGRATION.md` : spec pour brancher le mode `?mini` dans le widget Andy (à faire côté repo d'Andy) |
+| _(ce commit)_ | **Bloc A — Résumé d'absence** : fonction pure `absenceSummary(before,after)` (diff, +4 tests) + modale « Pendant ton absence… » dans `ui.js` (non punitive). Fidèle P1, moteur inchangé |
+| `3cb95df` | Doc `ANDY-INTEGRATION.md` : spec pour brancher le mode `?mini` dans le widget Andy (à faire côté repo d'Andy) |
 | `e87b452` | Mode compact `?mini` : coque retirée, écran + boutons réduits, fond transparent → accessoire flottant (widget Andy) |
 | `993cc0e` | Mise à jour auto de la PWA : bandeau « Nouvelle version — Recharger » (SW en attente + `SKIP_WAITING`) ; convention bump `CACHE_VERSION` |
 | `5f11936` | Décision : **pas de sync / Firebase / phase 2 abandonnés** — pets locaux distincts assumés (doc alignée) |
@@ -206,6 +209,17 @@ déploiement** qu'on veut signaler — c'est le déclencheur du bandeau.
 appareils est abandonnée : chaque porte a son propre pet local, et c'est très
 bien ainsi. On partage l'app + l'art (même URL, mêmes PNG), pas la vie du pet.
 → La **phase 1 est l'architecture finale** ; le `store` reste `localStorage`.
+
+**Enrichissement « Voie A » (décision Alex, 2026-07-02).** Après avoir pesé une
+proposition de refonte « compagnon moderne » (8 stats, pas de mort, affection…),
+Alex tranche pour **rester fidèle au P1** et n'ajouter que de l'**habillage
+par-dessus le moteur intact** — jamais de nouvelle stat ni de suppression de la
+mort. Trois blocs, dans l'ordre : **A. Résumé d'absence** ✅ (fait, ce commit —
+`absenceSummary` pur + modale douce) ; **B. Thèmes remappables** (extraire le
+vocabulaire codé en dur de `ui.js` → thème par défaut, puis registre + sélecteur +
+manifestes par thème ; les slots moteur ne bougent jamais) ; **C. Saveur
+narrative** (petites phrases par thème, choisies via le `rand` injecté). B et C
+restent à faire.
 
 _Décisions actées : brief versionné dans le repo (copie Drive = breadcrumb seul) ;
 `WHERE-IS-THE-CODE.md` retiré du repo (il appartient au Drive) ; mode **Dev** par

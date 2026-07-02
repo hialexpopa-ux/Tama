@@ -370,6 +370,45 @@ test('summary : humeur cohérente, sans jamais exposer les care mistakes', () =>
   assert.ok(!keys.some((k) => /mistake/i.test(k)));
 });
 
+// ——— Résumé d'absence ———
+test('absenceSummary : diffe avant/après, sans jamais exposer les care mistakes', () => {
+  const before = craft({ hunger: 4, happiness: 4 });
+  const after = craft({ hunger: 1, happiness: 2, flags: { poop: true } });
+  const r = T.absenceSummary(before, after);
+  assert.equal(r.hungerLost, 3);
+  assert.equal(r.happinessLost, 2);
+  assert.equal(r.poopNow, true);
+  assert.equal(r.sickNow, false);
+  assert.equal(r.died, false);
+  assert.equal(r.evolvedTo, null);
+  assert.ok(!Object.keys(r).some((k) => /mistake/i.test(k)));
+});
+
+test('absenceSummary : évolution + vieillissement pendant l\'absence', () => {
+  const before = craft({ stage: 'teen', character: 'teen_good', ageYears: 2 });
+  const after = craft({ stage: 'adult', character: 'adult_1', ageYears: 5 });
+  const r = T.absenceSummary(before, after);
+  assert.equal(r.evolvedTo, 'adult_1');
+  assert.equal(r.agedYears, 3);
+});
+
+test('absenceSummary : mort pendant l\'absence (cause remontée, jamais evolvedTo=dead)', () => {
+  const before = craft();
+  const after = craft({ alive: false, stage: 'dead', character: 'dead', deathCause: 'starvation' });
+  const r = T.absenceSummary(before, after);
+  assert.equal(r.died, true);
+  assert.equal(r.deathCause, 'starvation');
+  assert.equal(r.evolvedTo, null); // 'dead' n'est jamais une évolution à raconter
+});
+
+test('absenceSummary : pur — ne mute pas les états passés', () => {
+  const before = deepFreeze(craft({ hunger: 4 }));
+  const after = deepFreeze(craft({ hunger: 1 }));
+  const snap = JSON.stringify(before) + JSON.stringify(after);
+  T.absenceSummary(before, after); // ne doit pas jeter (états gelés)
+  assert.equal(JSON.stringify(before) + JSON.stringify(after), snap);
+});
+
 // ——— Bilan ———
 console.log(`\n${passed} réussis, ${failures.length} échoués${failures.length ? ' : ' + failures.join(', ') : ''}`);
 if (failures.length) process.exit(1);

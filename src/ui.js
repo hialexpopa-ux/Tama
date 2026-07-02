@@ -169,6 +169,49 @@ function showMeter() {
   m.querySelector('#m-close').onclick = closeModal;
 }
 
+// ——— Résumé d'absence (Bloc A) — narration douce de ce qui s'est passé pendant
+// que le joueur était parti. La modale lit des FAITS purs du moteur
+// (absenceSummary) ; la FORMULATION vit ici (vocabulaire, comme le reste de l'UI).
+// Seuils de PRÉSENTATION (pas du gameplay → pas dans constants.js) : en-deçà on
+// ne dérange pas le joueur, et le « coucou » nu n'apparaît que pour une vraie
+// absence.
+const RECAP_MIN_ELAPSED = 20;   // min hors-ligne avant d'envisager un résumé
+const RECAP_BARE_ELAPSED = 120; // min avant d'oser un simple « coucou »
+
+function formatAway(min) {
+  if (min < 90) return `${Math.round(min)} min`;
+  const h = min / 60;
+  return h < 36 ? `${Math.round(h)} h` : `${Math.round(h / 24)} jour(s)`;
+}
+
+function maybeShowAbsenceRecap(before, after, elapsedMin) {
+  if (!after.alive) return;                    // la mort a son propre écran
+  if (elapsedMin < RECAP_MIN_ELAPSED) return;  // absence trop courte
+  const f = T.absenceSummary(before, after);
+  const lines = [];
+  if (f.evolvedTo) lines.push(`${after.name} a grandi : le voilà <b>${CHAR_NAME[f.evolvedTo] ?? '?'}</b> !`);
+  if (f.agedYears > 0) lines.push(`Il a pris ${f.agedYears} an(s).`);
+  if (f.hungerLost > 0 || f.happinessLost > 0) lines.push('Ses cœurs ont un peu baissé.');
+  if (f.poopNow) lines.push('Il y a un petit caca à nettoyer.');
+  if (f.sickNow) lines.push('Il ne se sent pas très bien…');
+  if (f.misbehaving) lines.push('Il réclame ton attention.');
+  if (f.asleep) lines.push('Chut… il dort paisiblement.');
+
+  if (lines.length === 0) {
+    if (elapsedMin < RECAP_BARE_ELAPSED) return; // rien de notable + absence brève
+    lines.push('Il t\'attendait bien sagement.');
+  }
+
+  const m = openModal(`
+    <h2>Pendant ton absence…</h2>
+    <div class="big"></div>
+    <p class="meter-line">${formatAway(elapsedMin)} loin de toi.</p>
+    ${lines.map((l) => `<p class="meter-line">${l}</p>`).join('')}
+    <div class="row"><button id="r-close">Coucou !</button></div>`);
+  face(m.querySelector('.big'), petArt(after.character), CHAR_FACE[after.character] ?? '❓');
+  m.querySelector('#r-close').onclick = closeModal;
+}
+
 function showDeath() {
   modalBusy = true;
   const m = openModal(`
@@ -212,6 +255,19 @@ async function boot() {
     history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : ''));
   }
   state = (await store.load()) ?? T.createEgg(T.toLocalIso(Date.now()));
+
+  // Raccourci de test : ?ago=N recule l'horloge de la sauvegarde de N minutes
+  // (ex. http://localhost:8000/?reset&ago=25) pour voir le résumé d'absence sans
+  // attendre — le rattrapage du boot simule alors N min hors-ligne. Retiré de
+  // l'URL après coup (comme ?reset) pour ne pas re-déclencher à chaque rechargement.
+  const ago = Number(params.get('ago'));
+  if (ago > 0) {
+    state.lastUpdate = T.toLocalIso(Date.now() - ago * 60000);
+    params.delete('ago');
+    const qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : ''));
+  }
+
   await store.save(state);
   art = await loadArt();
 
@@ -233,8 +289,18 @@ async function boot() {
   $('btn-meter').onclick = showMeter;
   $('btn-discipline').onclick = () => apply(T.scold);
 
-  tickNow(); // rattrapage hors-ligne (plafonné par le moteur)
+  // Rattrapage hors-ligne au boot (plafonné par le moteur). On capture l'état
+  // d'AVANT pour raconter l'absence : `state` est réassigné à un NOUVEL objet par
+  // tick(), donc `before` reste intact (jamais muté).
+  const before = state;
+  const nowMs = Date.now();
+  const elapsedMin = (nowMs - Date.parse(state.lastUpdate)) / 60000;
+  if (elapsedMin > 0) {
+    state = T.tick(state, elapsedMin, T.toLocalIso(nowMs), rand);
+    store.save(state);
+  }
   render();
+  maybeShowAbsenceRecap(before, state, elapsedMin);
 
   setInterval(tickNow, 5000);
   document.addEventListener('visibilitychange', () => {

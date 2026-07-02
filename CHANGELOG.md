@@ -7,6 +7,19 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Résumé d'absence (Bloc A de la « Voie A » — enrichissement fidèle P1)** : au
+  retour dans l'app après une absence, une modale douce **« Pendant ton absence… »**
+  raconte ce qui s'est passé (a grandi, a pris de l'âge, cœurs baissés, caca à
+  nettoyer, pas en forme, réclame de l'attention, ou dort) — jamais culpabilisant
+  (« il t'attendait sagement » quand rien de notable). Moteur : **fonction pure
+  `absenceSummary(before, after)`** qui **diffe** l'état d'avant/après le
+  rattrapage et renvoie des **faits** (aucun texte, jamais les care mistakes) ;
+  **aucune signature du moteur changée** (le tick reste tel quel). UI : `ui.js`
+  capture l'état d'avant le rattrapage au boot et déclenche la modale au-delà d'un
+  seuil de présentation (20 min ; « coucou » nu réservé aux absences ≥ 2 h). Si le
+  pet est mort pendant l'absence, l'écran de mort prime. +4 tests moteur.
+  Raccourci de test **`?ago=N`** (recule l'horloge de N min, se combine à `?reset`)
+  pour voir le résumé sans attendre.
 - **`ANDY-INTEGRATION.md`** : spec pour brancher le mode `?mini` dans le widget
   Andy (URL à charger, iframe / fenêtre flottante / `WebContentsView`, rappels
   d'archi — Andy n'affiche que l'URL, pet local distinct). À exécuter côté Andy.
