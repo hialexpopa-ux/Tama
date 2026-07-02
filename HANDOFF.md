@@ -216,13 +216,99 @@ bien ainsi. On partage l'app + l'art (même URL, mêmes PNG), pas la vie du pet.
 proposition de refonte « compagnon moderne » (8 stats, pas de mort, affection…),
 Alex tranche pour **rester fidèle au P1** et n'ajouter que de l'**habillage
 par-dessus le moteur intact** — jamais de nouvelle stat ni de suppression de la
-mort. Trois blocs, dans l'ordre : **A. Résumé d'absence** ✅ (fait, ce commit —
-`absenceSummary` pur + modale douce) ; **B. Thèmes remappables** (extraire le
-vocabulaire codé en dur de `ui.js` → thème par défaut, puis registre + sélecteur +
-manifestes par thème ; les slots moteur ne bougent jamais) ; **C. Saveur
-narrative** (petites phrases par thème, choisies via le `rand` injecté). B et C
-restent à faire.
+mort. Trois blocs : **A. Résumé d'absence** ✅ (fait, `6d69fd0`) ; **B. Thèmes
+remappables** et **C. Saveur narrative** restent à faire — **spec + critères de
+« c'est bien fait » en §7 ci-dessous.**
 
 _Décisions actées : brief versionné dans le repo (copie Drive = breadcrumb seul) ;
 `WHERE-IS-THE-CODE.md` retiré du repo (il appartient au Drive) ; mode **Dev** par
 défaut dans `constants.js` (éclosion 30 s, stades courts), l'Officiel à un flag près._
+
+## 7. Enrichissement Voie A — blocs B & C (à faire, avec critères de « c'est bien fait »)
+
+> **But de cette section** : qu'une future session sache exactement quoi livrer
+> **et comment prouver que c'est bien fait**. Chaque bloc a une *définition de fini*
+> (cases à cocher) + des *garde-fous vérifiables mécaniquement*. Un bloc n'est
+> « fait » que si **toutes** ses cases sont vraies. Cocher ici (`[x]`) et déplacer
+> le bloc en ✅ dans le §6 quand c'est livré.
+
+**Invariant commun (non négociable, vaut pour B et C).** Ces blocs sont de
+l'**habillage** : ils ne touchent **jamais** aux mécaniques P1. Vérif mécanique
+avant de déclarer fini :
+- `git diff <base> -- src/tama.js src/constants.js` = **vide** (moteur et valeurs
+  de gameplay inchangés — sinon ce n'est plus la Voie A). Bloc C peut ajouter une
+  fonction *pure de sélection de texte* à `tama.js`, mais **zéro** nouvelle stat,
+  **zéro** mécanique, et elle ne modifie pas l'état.
+- `grep -n "Math.random\|Date.now" src/tama.js` = **rien** (aléatoire/horloge
+  toujours injectés).
+- `npm test` reste **vert** (32 moteur + 5 store), et le **compte de tests ne
+  baisse pas**.
+- Aucun texte de gameplay ni chemin d'image **codé en dur** ne réapparaît dans
+  `ui.js` (règle « art via manifeste » + vocabulaire dans le thème).
+
+### Bloc B — Thèmes remappables
+
+**But** : rhabiller le pet (vampire / sirène / cochon / secrétaire…) — mots **et**
+art — sans toucher au moteur. Un thème remappe la **présentation** des slots
+existants ; il ne renomme aucun slot et ne déplace aucune valeur de gameplay.
+
+*Définition de fini :*
+- [ ] Un **thème par défaut** (P1 français) extrait de `ui.js` : libellés des 7
+  boutons + libellés de menus (repas/friandise…), noms des formes (`CHAR_NAME`),
+  faces émoji placeholder (`CHAR_FACE`), icônes de besoin (`NEED_ICON`), libellés
+  de mort (`DEATH_LABEL`). Après extraction, **`ui.js` ne contient plus aucun de
+  ces textes en dur** — il lit le thème actif.
+- [ ] Un fichier dédié (ex. `src/themes.js`) exporte un **registre** `{ id → thème }`.
+  Un thème = `{ id, labels, formNames, faces, needIcons, deathLabels, manifestUrl }`.
+- [ ] Les **clés = slots moteur** (`egg`/`baby`/`child`/`teen_good`/`teen_bad`/
+  `adult_1..6`/`dead`) : un thème ne fait que les **remapper**. Aucun slot renommé.
+- [ ] **Thème actif persisté** dans le `store` (champ dédié, défaut = P1). Le
+  changer est une **action d'UI pure** : elle ne touche **jamais** l'état du pet
+  (mêmes cœurs, même âge, même vie après bascule).
+- [ ] **Sélecteur** de thème dans l'UI (ex. écran Santé ou petit menu), bascule à
+  chaud (re-render immédiat, art + mots).
+- [ ] Chaque thème pointe vers son **`assets/<theme>/manifest.json`** ; slot/PNG
+  manquant → **placeholder émoji du thème**, jamais de crash (règle art conservée).
+- [ ] **Au moins un 2e thème de démonstration** (ne serait-ce que ses `labels` +
+  `faces`) pour prouver le remapping **même sans PNG** d'Alex.
+
+*Comment vérifier que c'est bien fait :* `node --check` OK ; `npm test` vert
+(moteur intact → aucun test cassé) ; **test live** : basculer de thème change les
+mots **et** l'art, et **ne change rien** à la vie du pet (vérifier cœurs/âge avant/
+après bascule) ; supprimer un PNG d'un thème → placeholder, pas de crash.
+
+*Fichiers probables :* `src/themes.js` (nouveau), `src/ui.js` (lit le thème au lieu
+des constantes en dur), `src/store.js` (persiste le choix), `assets/<theme>/manifest.json`
+(un par thème), `index.html` (bouton/sélecteur éventuel). **Pas** `tama.js` ni
+`constants.js`.
+
+### Bloc C — Saveur narrative
+
+**But** : de petites phrases de personnalité selon l'état (humeur, besoin, moment,
+retour d'absence), pour l'attachement — **du texte, pas une mécanique**. Se branche
+mieux **après B** (les phrases sont thématisées).
+
+*Définition de fini :*
+- [ ] Un **jeu de phrases par thème** (rangé dans le thème du Bloc B, ou un module
+  dédié), indexé par situation : humeur (`happy`/`meh`/`sad`), besoin actif
+  (`hunger`/`happy`/`sick`/`poop`/`discipline`), moment (jour / nuit / sommeil),
+  et éventuellement le retour d'absence (réutilise les faits de `absenceSummary`).
+- [ ] La **sélection** d'une phrase utilise le **`rand` injecté** (jamais
+  `Math.random` dans le moteur). Si une fonction de sélection va dans `tama.js`,
+  elle est **pure** et **ne modifie pas l'état** (elle prend l'état + `rand`,
+  renvoie une clé/texte).
+- [ ] Les phrases s'affichent **discrètement** (sous l'écran, au tap sur le pet, ou
+  dans le résumé d'absence) **sans gêner** le jeu ni masquer les appels.
+- [ ] **Fidélité P1 préservée** : aucune phrase ne crée de stat ni n'altère une
+  mécanique (garde-fou `git diff` ci-dessus).
+- [ ] Un **jeu par défaut** (thème P1) existe ; les thèmes de B peuvent le surcharger.
+
+*Comment vérifier que c'est bien fait :* si la sélection est une fonction pure →
+**test de déterminisme** (même seed → même phrase) qui augmente le compte de
+tests ; **test live** : les phrases apparaissent, **varient**, et restent
+**cohérentes** avec l'état affiché (une phrase « affamé » ne sort pas quand les
+cœurs sont pleins).
+
+*Fichiers probables :* `src/themes.js` (phrases par thème) ou `src/phrases.js`
+(nouveau), `src/ui.js` (affichage), éventuellement une fonction pure de sélection
+dans `src/tama.js` (**pure, sans effet de bord**) + son test dans `test/tama.test.js`.
