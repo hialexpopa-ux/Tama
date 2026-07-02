@@ -1,18 +1,21 @@
 # Tama 🥚
 
-Un **Tamagotchi fidèle au fonctionnement officiel Bandai Gen 1 (P1, 1996-97)**, en **PWA**
-(Progressive Web App) installable sur **desktop et Android**. JS pur, sans framework ni build.
+Un **compagnon virtuel LCD à l'ancienne**, dans l'esprit des *virtual pets* de 1996, livré en
+**PWA** (Progressive Web App) installable sur **desktop et Android**. JS pur, sans framework ni build.
 
 **▶ Jouer : <https://hialexpopa-ux.github.io/Tama/>** (installable depuis le navigateur ;
 sur Android : menu → « Ajouter à l'écran d'accueil »)
 
 ## Le pitch
 
-Un vrai P1 : deux compteurs de 4 cœurs (**faim** et **bonheur**), une barre de **discipline**
-par paliers de 25 %, un **poids**, et des **care mistakes** cachés qui pilotent l'évolution
-(œuf → bébé → enfant → ado → adulte). Sommeil, caca et maladie sont gérés en *flags* ; la
-santé est implicite (négliger le pet finit par le rendre malade, puis le tuer). Un mini-jeu
-« gauche ou droite » remplit le bonheur et fait maigrir.
+Fidèle à l'esprit des premiers compagnons virtuels : deux compteurs de 4 cœurs (**faim** et
+**bonheur**), une barre de **discipline** par paliers de 25 %, un **poids**, et des **care
+mistakes** cachés qui pilotent l'évolution (œuf → bébé → enfant → ado → adulte). Sommeil, caca
+et maladie sont gérés en *flags* ; la santé est implicite (négliger le pet finit par le rendre
+malade, puis le tuer). Un mini-jeu « gauche ou droite » remplit le bonheur et fait maigrir.
+
+> Projet **hommage indépendant**, sans lien avec une marque. « Comportement Gen 1 / 1996 »
+> est notre **boussole de conception interne**, pas une revendication officielle.
 
 ## Architecture (une seule app, trois portes)
 

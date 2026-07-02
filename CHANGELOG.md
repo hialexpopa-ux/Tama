@@ -7,6 +7,16 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Doctrine design gravée + brief d'art** (suite à une critique d'un web/game
+  designer, 2026-07-02) : **« toute nouveauté habille le P1, elle ne le remplace
+  pas »** (listes Oui/Non, frontière *écran LCD = PNG* / *coque = CSS thémable*,
+  wording public prudent). Nouveau **`ASSETS.md`** : liste **fermée et autoritaire**
+  des 23 slots réels (11 stages + 5 overlays + 7 icons), section « non slotté
+  aujourd'hui », structure par thème, ordre Classic → Vampire → Secrétaire.
+  Doctrine reprise dans `CLAUDE.md` (§ Doctrine) et `HANDOFF.md` (§7, + raffinement
+  « résumé en 3 tons » et *future polish* « mort lisible »). **README** repassé en
+  wording public (« inspiré des virtual pets LCD des 90s », plus de « fonctionnement
+  officiel Bandai »). Docs seulement — **moteur intact**.
 - **Résumé d'absence (Bloc A de la « Voie A » — enrichissement fidèle P1)** : au
   retour dans l'app après une absence, une modale douce **« Pendant ton absence… »**
   raconte ce qui s'est passé (a grandi, a pris de l'âge, cœurs baissés, caca à

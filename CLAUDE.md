@@ -18,9 +18,29 @@ l'**état vivant** (historique, avancement, directions).
 
 ## Objectif
 
-Un **Tamagotchi fidèle au fonctionnement officiel Bandai Gen 1 (P1, 1996-97)**, livré en
-**PWA** installable sur **desktop + Android**. Table rase : **rien** n'est importé d'Andy
-(pas de code, pas de sauvegarde, pas de docs).
+Un **compagnon virtuel LCD fidèle au comportement du P1 (Bandai Gen 1, 1996-97)** — c'est la
+**boussole interne** de conception —, livré en **PWA** installable sur **desktop + Android**.
+Table rase : **rien** n'est importé d'Andy (pas de code, pas de sauvegarde, pas de docs).
+
+## Doctrine — fidélité P1 vs habillage (grave, 2026-07-02)
+
+**Toute nouveauté habille le P1, elle ne le remplace pas.** Le moteur reste cruel et fidèle ;
+le design rend cette dureté lisible, belle et incarnée — sans la transformer en jeu moderne.
+
+- **Oui** (habillage) : sprites, coques, palettes, sons, petites phrases, résumés d'absence,
+  thèmes visuels interchangeables.
+- **Non** (remplacement) : nouvelle stat, quête, niveaux, boutique, comptes, cloud,
+  récompenses quotidiennes façon mobile game.
+- **Frontière art tranchée (2026-07-02)** : *dans l'écran LCD* → **PNG via manifeste** ;
+  *hors écran* (coque, boutons physiques, device, mini-mode) → **CSS thémable**. La coque est
+  un contenant responsive → CSS (couleur/ombres/états pressed par thème) ; un `shellImage` PNG
+  optionnel par thème reste un luxe **futur**, pas maintenant.
+- **Wording public** (README, tout texte user-facing) : « inspiré des virtual pets LCD des
+  années 90 » / « fidèle à l'esprit ». **Pas** de « fonctionnement officiel », pas de
+  revendication de marque. « Comportement P1 / Gen 1 » = boussole **interne** (docs de dev).
+- **Résumé d'absence** : raconte **uniquement les états observables** (faim, caca, malade, a
+  grandi, a dormi). Ne révèle **jamais** les care mistakes, les appels manqués ni le scoring
+  d'évolution (le mystère du P1 fait partie du jeu).
 
 ## Imbrication (à garder en tête)
 

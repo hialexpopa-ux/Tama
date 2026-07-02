@@ -67,7 +67,7 @@ de test — zéro dépendance, zéro build. Piège : pas de round-trip
 index.html · manifest.webmanifest · sw.js
 src/  tama.js (moteur pur) · constants.js · store.js · ui.js · game.js · assets.js
 assets/  manifest.json (slots→PNG) · sprites/ (PNG remplaçables)
-CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
+CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md · ASSETS.md (brief d'art : slots réels)
 ```
 
 ## 4. Conventions & garde-fous (résumé — détail dans `CLAUDE.md`)
@@ -91,7 +91,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Toilettage passation : historique recalé sur les vrais hashes (Bloc A + bump v4) |
+| _(ce commit)_ | **Doctrine design gravée** : « toute nouveauté habille le P1 » (README wording public prudent, doctrine `CLAUDE.md`, §7 enrichie, nouveau `ASSETS.md`). Docs seulement, moteur intact |
+| `e22c492` | Docs : spec traçable des blocs B (thèmes) et C (saveur narrative) — critères de « c'est bien fait » (§7) |
 | `d38bd66` | chore : `CACHE_VERSION` → `tama-v4` (signaler le résumé d'absence aux installs existantes) |
 | `6d69fd0` | **Bloc A — Résumé d'absence** : fonction pure `absenceSummary(before,after)` (diff, +4 tests) + modale « Pendant ton absence… » dans `ui.js` (non punitive) + raccourci `?ago=N`. Fidèle P1, moteur inchangé |
 | `3cb95df` | Doc `ANDY-INTEGRATION.md` : spec pour brancher le mode `?mini` dans le widget Andy (à faire côté repo d'Andy) |
@@ -232,6 +233,20 @@ défaut dans `constants.js` (éclosion 30 s, stades courts), l'Officiel à un fl
 > « fait » que si **toutes** ses cases sont vraies. Cocher ici (`[x]`) et déplacer
 > le bloc en ✅ dans le §6 quand c'est livré.
 
+**Doctrine (grave, 2026-07-02 — critique d'un web/game designer relayée par Alex).**
+« **Toute nouveauté habille le P1, elle ne le remplace pas.** » Le moteur reste
+cruel et fidèle ; le design rend cette dureté **lisible, belle et incarnée**, sans
+la transformer en jeu moderne. (Version complète et opérationnelle dans `CLAUDE.md`
+§ Doctrine ; spec d'art autoritaire dans **[`ASSETS.md`](ASSETS.md)**.)
+- **Oui** : sprites, coques, palettes, sons, phrases, résumés d'absence, thèmes.
+- **Non** : nouvelle stat, quête, niveaux, boutique, comptes, cloud, récompenses
+  quotidiennes façon mobile game.
+- **Frontière art tranchée** : *dans l'écran LCD* → PNG (manifeste) ; *hors écran*
+  (coque, boutons, device, mini-mode) → **CSS thémable**. La coque est un contenant
+  responsive → CSS ; un `shellImage` PNG par thème = luxe **futur** optionnel.
+- **Wording public** corrigé (README) : « inspiré des virtual pets LCD des 90s /
+  fidèle à l'esprit » ; « P1 / Gen 1 » = boussole **interne** seulement.
+
 **Invariant commun (non négociable, vaut pour B et C).** Ces blocs sont de
 l'**habillage** : ils ne touchent **jamais** aux mécaniques P1. Vérif mécanique
 avant de déclarer fini :
@@ -278,9 +293,22 @@ mots **et** l'art, et **ne change rien** à la vie du pet (vérifier cœurs/âge
 après bascule) ; supprimer un PNG d'un thème → placeholder, pas de crash.
 
 *Fichiers probables :* `src/themes.js` (nouveau), `src/ui.js` (lit le thème au lieu
-des constantes en dur), `src/store.js` (persiste le choix), `assets/<theme>/manifest.json`
-(un par thème), `index.html` (bouton/sélecteur éventuel). **Pas** `tama.js` ni
-`constants.js`.
+des constantes en dur), `src/store.js` (persiste le choix), `assets/themes/<id>/manifest.json`
+(un par thème — cf. `ASSETS.md`), `index.html` (bouton/sélecteur éventuel). **Pas**
+`tama.js` ni `constants.js`.
+
+*Décisions design (2026-07-02) :*
+- **Ordre de déploiement des thèmes** : **Classic LCD** (référence sobre, fin des
+  émojis) → **Vampire** (signature mémorable) → **Secrétaire** (absurde, prouve le
+  changement de ton sans changer de règles). Sirène / cochon ensuite. Trois thèmes
+  suffisent (nostalgie / fantaisie / humour).
+- **Coque = CSS thémable, pas PNG** (fork tranché) : la coque, les boutons et le
+  mode compact sont un **contenant responsive** → variables CSS par thème
+  (couleur/ombres/états pressed). PNG **uniquement** pour ce qui vit **dans l'écran
+  LCD**. Un `shellImage` optionnel par thème pourra venir plus tard, pas maintenant.
+- **Design system LCD d'abord** (priorité designer avant même les sprites) : figer
+  grille pixel, contraste, états actif/inactif des icônes, clignotement, shake,
+  mode nuit, overlays. Règle : *dans l'écran = monde LCD ; hors écran = device*.
 
 ### Bloc C — Saveur narrative
 
@@ -312,3 +340,31 @@ cœurs sont pleins).
 *Fichiers probables :* `src/themes.js` (phrases par thème) ou `src/phrases.js`
 (nouveau), `src/ui.js` (affichage), éventuellement une fonction pure de sélection
 dans `src/tama.js` (**pure, sans effet de bord**) + son test dans `test/tama.test.js`.
+
+### Raffinement prévu — résumé d'absence en 3 tons (Bloc A déjà livré)
+
+Bloc A (`6d69fd0`) narre déjà des **états observables** ; prochaine passe : les
+**hiérarchiser en 3 tons**, toujours sur l'état **visible** (jamais le scoring
+caché). Doctrine :
+- **grave** : « Il est tombé malade. » / « Il avait très faim. » / « Il dort
+  encore, épuisé. »
+- **moyen** : « Un caca est apparu. » / « Ses cœurs ont baissé. » / « La lumière
+  est restée allumée. »
+- **neutre** : « Il a dormi. » / « Il a grandi. » / « Rien à signaler. »
+
+**Interdit** : verbaliser les **appels manqués**, les **care mistakes** ou la
+**progression d'évolution** (ex. « il t'a appelé, personne n'a répondu » →
+révélerait le compteur caché). Le résumé ne raconte **que** du visible. Se code
+côté UI (tons dérivés des faits de `absenceSummary`), moteur inchangé.
+
+### Future polish (hors Voie A immédiate) — rendre la mort plus lisible
+
+Objectif : que le joueur comprenne **« je l'ai négligé → conséquence logique »**,
+jamais **« le jeu m'a puni sans prévenir »**. À faire **sans nouvelle mécanique** :
+une lecture **dérivée** de l'état existant, à l'usage de l'UI seulement.
+- **Autorisé** : flag dérivé dans `summary()` (ex. `dangerHunger` / `dangerSick`,
+  calculé depuis les timers déjà présents) → créature **affaiblie** si faim
+  critique, overlay malade **accentué**, écran **assombri** en état grave.
+  Overlays d'art possibles en plus : `evolution_flash`, `medicine_effect`.
+- **Interdit** : barre de santé, jauge de danger affichée, exposition des care
+  mistakes. Ce n'est **pas** une stat — juste une **lecture** de l'état existant.
