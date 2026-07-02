@@ -122,6 +122,36 @@
       font-size: 10px; opacity: .55; z-index: 1;
     }
 
+    /* ——— Mode compact « ?mini » : accessoire flottant (widget Andy) ———
+       On retire la coque rose et on met le fond transparent pour se glisser
+       dans le cadre de l'hôte ; il ne reste que l'écran + des boutons réduits.
+       Déclenché par l'URL ?mini (cf. ui.js), rien d'autre ne change. */
+    body.mini {
+      padding: 0;
+      background: transparent;
+      place-items: stretch;
+    }
+    body.mini #device {
+      width: 100%;
+      min-height: 100dvh;
+      padding: 6px;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    body.mini .icon-row { padding: 3px 2px; gap: 2px; }
+    body.mini .icon-row button {
+      width: 38px; height: 38px;
+      font-size: 17px;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, .35);
+    }
+    body.mini .icon-row button img { width: 22px; height: 22px; }
+    body.mini #screen { border-width: 6px; }
+
     /* Bandeau « nouvelle version » (mise à jour de la PWA, cf. ui.js) */
     #update-banner {
       position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);

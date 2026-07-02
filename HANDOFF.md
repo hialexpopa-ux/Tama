@@ -89,7 +89,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Mise à jour auto de la PWA : bandeau « Nouvelle version — Recharger » (SW en attente + `SKIP_WAITING`) ; convention bump `CACHE_VERSION` |
+| _(ce commit)_ | Mode compact `?mini` : coque retirée, écran + boutons réduits, fond transparent → accessoire flottant (widget Andy) |
+| `993cc0e` | Mise à jour auto de la PWA : bandeau « Nouvelle version — Recharger » (SW en attente + `SKIP_WAITING`) ; convention bump `CACHE_VERSION` |
 | `5f11936` | Décision : **pas de sync / Firebase / phase 2 abandonnés** — pets locaux distincts assumés (doc alignée) |
 | `2847063` | Fix cycle de vie fidèle P1 : bébé sans nuit (+ sieste official), sommeil par personnage, décroissance par stade, mode dev rééchelonné, noms français |
 | `895cdc0` | Toilettage passation : historique recalé sur les vrais hashes |

@@ -195,11 +195,21 @@ function startGame() {
 
 // ——— Boot ———
 async function boot() {
+  const params = new URLSearchParams(location.search);
+
+  // Mode compact (accessoire flottant, ex. widget Andy) : ?mini retire la coque
+  // et n'affiche que l'écran + boutons réduits. On le GARDE dans l'URL (contrai-
+  // rement à ?reset) pour que l'hôte reste en mini au fil des navigations.
+  if (params.has('mini')) document.body.classList.add('mini');
+
   // Raccourci de test : ouvrir l'app avec ?reset repart d'un œuf neuf
   // (ex. http://localhost:8000/?reset) — évite de fouiller les DevTools.
-  if (new URLSearchParams(location.search).has('reset')) {
+  if (params.has('reset')) {
     await store.clear();
-    history.replaceState(null, '', location.pathname); // retire ?reset de l'URL
+    // retire ?reset mais préserve les autres paramètres (ex. ?mini)
+    params.delete('reset');
+    const qs = params.toString();
+    history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : ''));
   }
   state = (await store.load()) ?? T.createEgg(T.toLocalIso(Date.now()));
   await store.save(state);

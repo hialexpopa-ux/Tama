@@ -7,6 +7,11 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Mode compact `?mini`** : ouvrir `…/Tama/?mini` retire la coque rose et les
+  gros boutons, ne garde que l'écran LCD + une rangée de boutons réduits, sur
+  **fond transparent** — pour glisser le Tama dans un accessoire flottant (widget
+  Andy). Le paramètre est conservé dans l'URL (compatible avec `?reset`). Rien
+  d'autre ne change : même moteur, mêmes actions, pet jouable dans le petit format.
 - **Mise à jour auto de la PWA** : le service worker n'active plus la nouvelle
   version en douce (plus de `skipWaiting()` à l'install → il attend). L'app
   détecte la version en attente et affiche un **bandeau « Nouvelle version —
