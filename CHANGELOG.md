@@ -7,6 +7,13 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **`official` promu mode livré** (playtest réel) : `MODE='official'` par défaut
+  dans `constants.js` — l'app en ligne tourne désormais aux **vraies durées P1**
+  (bébé 65 min, enfant 24 h, ado 48 h, adulte en jours). Le mode **dev** reste
+  dispo à un flag près pour le test rapide. Nouveau **`PLAYTEST.md`** : grille
+  d'**audit design** (feel P1 réel avant de figer la baseline LCD) — early official
+  ~1 h + arc complet sur plusieurs jours. Tests : **33 moteur** en official
+  (32 en dev) + 5 store, verts.
 - **Résumé d'absence en 3 tons** : le récap « Pendant ton absence… » hiérarchise
   désormais les états **observables** en *grave* (gras : tombé malade / avait très
   faim), *moyen* (caca / cœurs baissés / lumière restée allumée / a grandi) et

@@ -47,7 +47,7 @@ ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat
 
 ```powershell
 # Tester le moteur en Node (aucune UI, zéro dépendance)
-npm test             # 32 tests moteur (33 en official) + 5 store, verts dans les DEUX modes
+npm test             # 33 tests moteur en official (32 en dev) + 5 store, verts dans les DEUX modes
 
 # Servir la PWA en local (service worker impossible en file://)
 npm start            # = node tools/serve.mjs  → http://localhost:8000
@@ -91,7 +91,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md · ASSETS.md (brief d'art :
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | **Résumé d'absence en 3 tons** (grave/moyen/neutre, gras+atténué) — UI seulement (`ui.js` + CSS), moteur intact ; ligne « réclame ton attention » retirée ; wording public `index.html` ; bump `CACHE_VERSION` v5 |
+| _(ce commit)_ | **`official` promu mode livré** pour le playtest réel (`MODE='official'`, tests 33 verts) + `PLAYTEST.md` (grille d'audit design) ; bump `CACHE_VERSION` v6 |
+| `9e8bd5e` | **Résumé d'absence en 3 tons** (grave/moyen/neutre, gras+atténué) — UI seulement (`ui.js` + CSS), moteur intact ; ligne « réclame ton attention » retirée ; wording public `index.html` ; bump `CACHE_VERSION` v5 |
 | `5580eeb` | **Doctrine design gravée** : « toute nouveauté habille le P1 » (README wording public prudent, doctrine `CLAUDE.md`, §7 enrichie, nouveau `ASSETS.md`). Docs seulement, moteur intact |
 | `e22c492` | Docs : spec traçable des blocs B (thèmes) et C (saveur narrative) — critères de « c'est bien fait » (§7) |
 | `d38bd66` | chore : `CACHE_VERSION` → `tama-v4` (signaler le résumé d'absence aux installs existantes) |
@@ -203,7 +204,11 @@ regarde_ ; (b) confirmer l'installation Android à l'écran d'accueil ; (c) **An
 lanceur / widget « MON TAMA »** (dans le repo d'Andy : afficher l'URL `?mini`,
 ne jamais calculer — **spec prête : `ANDY-INTEGRATION.md`**) ; (d) les PNG
 d'Alex (sprites + icônes) quand il veut ; (e) **vivre une vraie partie en
-`MODE = 'official'`** (jamais éprouvé en conditions réelles, seulement en tests).
+`MODE = 'official'`** — **EN COURS** : official promu mode livré, playtest cadré
+comme audit design dans **[`PLAYTEST.md`](PLAYTEST.md)** (early official ~1 h +
+arc complet sur plusieurs jours au tél). Ses notes = cahier des charges de la
+baseline Classic LCD (Commit 2). ⚠️ official = vraies durées (bébé 65 min, enfant
+24 h, ado 48 h, adulte en jours), pas de raccourci (rattrapage plafonné 12 h).
 ✅ **Mise à jour auto faite** : bandeau « Nouvelle version — Recharger » (SW en
 attente + `SKIP_WAITING`). ⚠️ **Bumper `CACHE_VERSION` (sw.js) à chaque
 déploiement** qu'on veut signaler — c'est le déclencheur du bandeau.
@@ -223,8 +228,9 @@ remappables** et **C. Saveur narrative** restent à faire — **spec + critères
 « c'est bien fait » en §7 ci-dessous.**
 
 _Décisions actées : brief versionné dans le repo (copie Drive = breadcrumb seul) ;
-`WHERE-IS-THE-CODE.md` retiré du repo (il appartient au Drive) ; mode **Dev** par
-défaut dans `constants.js` (éclosion 30 s, stades courts), l'Officiel à un flag près._
+`WHERE-IS-THE-CODE.md` retiré du repo (il appartient au Drive) ; **mode `official`
+promu mode livré** (2026-07-02) pour le playtest réel — le **Dev** reste dispo à un
+flag près dans `constants.js` (éclosion 30 s, stades courts) pour le test rapide._
 
 ## 7. Enrichissement Voie A — blocs B & C (à faire, avec critères de « c'est bien fait »)
 

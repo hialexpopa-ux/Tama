@@ -5,7 +5,7 @@
 //                rythme « 2-3 soins/jour » jouable
 // Bascule via MODE. Tout est réglable ; les mécaniques, elles, sont dans tama.js.
 
-export const MODE = 'dev'; // 'official' | 'dev'
+export const MODE = 'official'; // 'official' | 'dev'
 
 // ——— Communes aux deux modes (fidélité P1 non négociable) ———
 const SHARED = {
