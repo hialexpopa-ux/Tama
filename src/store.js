@@ -1,7 +1,8 @@
 // store.js — la couture entre le moteur et la persistance (TAMA-START §1, §8.2).
-// Phase 1 : localStorage (un pet par appareil). Phase 2 : MÊME interface,
-// implémentation Firebase (un seul pet partout). C'est pour ça que tout est
-// asynchrone dès maintenant : la bascule cloud ne changera rien chez les appelants.
+// Persistance LOCALE à chaque appareil (localStorage) : un pet par appareil, pas
+// de synchronisation (décision Alex 2026-07-02 — la sync/Firebase est abandonnée).
+// L'interface reste asynchrone : ça découple l'app de la persistance et ne coûte
+// rien, sans engager à quoi que ce soit côté cloud.
 //
 // Contrat :
 //   load()  → Promise<state | null>   (null = pas de sauvegarde exploitable)

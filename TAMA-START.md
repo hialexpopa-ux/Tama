@@ -6,6 +6,12 @@
 > (« Emplacement : CodexApps/Tama », « pas de HANDOFF.md » §2b) sont **caducs** :
 > le repo vit hors-Drive et le mécanisme de passation (`HANDOFF.md`) est en place.
 > Les **mécaniques P1** (§3-§7), elles, restent la référence.
+>
+> ⚠️ **CADUC AUSSI — la synchronisation entre appareils est ABANDONNÉE** (décision
+> Alex, 2026-07-02). Tout ce qui parle de **« sync », « phase 2 », « Firebase »,
+> « couche partagée », « un seul pet partout »** (§0, §1, §8, §9…) ne s'applique
+> plus : le `store` reste **local** à chaque appareil, chaque porte a **son** pet.
+> On partage l'app + l'art, pas la vie du pet. La **phase 1 est l'architecture finale**.
 
 > Nouvelle app **séparée** d'Andy. Objectif : un Tamagotchi **fidèle au fonctionnement
 > officiel Bandai Gen 1 (P1, 1996-97)**, en **PWA** (desktop + Android), ouvrable par Andy,

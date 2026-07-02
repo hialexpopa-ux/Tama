@@ -11,7 +11,7 @@ import { loadArt, noArt } from './assets.js';
 const $ = (id) => document.getElementById(id);
 const store = createLocalStore();
 // Le moteur n'a jamais Math.random : c'est ICI (la coquille) qu'on fabrique le
-// rand injecté. Seedé par session — le déterminisme fort viendra avec la phase 2.
+// rand injecté. Seedé par session (suffisant : chaque appareil vit son pet en local).
 const rand = T.makeRand(`ui|${Date.now()}|${Math.random()}`);
 
 let state = null;

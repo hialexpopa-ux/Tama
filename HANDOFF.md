@@ -33,9 +33,10 @@ installable **desktop + Android**, en **JS pur sans build**. Il n'existe qu'**un
 seule app : la PWA**, ouverte par trois portes — Andy (lanceur Electron qui ouvre
 l'URL et *lit* l'état, ne calcule jamais), navigateur desktop, Android (« ajouter à
 l'écran d'accueil »). Le **moteur** (`src/tama.js`) est du **pur calcul d'état**
-(aucun DOM/`fs`/réseau). Persistance derrière une interface **`store`** : locale en
-phase 1, **Firebase** en phase 2 (couche partagée → un seul pet vécu partout ;
-**Drive n'intervient jamais dans la synchro**).
+(aucun DOM/`fs`/réseau). Persistance derrière une interface **`store`** :
+**locale à chaque appareil** (`localStorage`). **Décision Alex 2026-07-02 : pas de
+synchronisation entre appareils** — chaque porte a son propre pet ; on partage l'app
+et l'art (même URL, mêmes PNG), pas la vie du pet. **Firebase / phase 2 abandonnés.**
 
 Mécaniques P1 (détail complet dans `TAMA-START.md`, racine du repo) : 2 compteurs de
 **4 cœurs** (faim/bonheur), **discipline** par paliers 0/25/50/75/100, **poids**,
@@ -48,7 +49,7 @@ ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat
 # Tester le moteur en Node (aucune UI, zéro dépendance)
 npm test             # 28 tests moteur (29 en official) + 5 store, verts dans les DEUX modes
 
-# Servir la PWA en local (service worker + Firebase impossibles en file://)
+# Servir la PWA en local (service worker impossible en file://)
 npm start            # = node tools/serve.mjs  → http://localhost:8000
                      # (pas de Python sur la machine ; npx serve marche aussi)
 # Repartir d'un œuf neuf pendant les tests : http://localhost:8000/?reset
@@ -75,7 +76,7 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 - **Un seul ticker.** **Aucune logique de jeu dans l'UI.** **Toutes les valeurs de
   gameplay dans `constants.js`.** **Art 100 % remplaçable via manifeste** (slot
   manquant → placeholder, jamais de crash).
-- **Règle de relais** : pour tout sujet qui bouge (PWA/service worker, Firebase,
+- **Règle de relais** : pour tout sujet qui bouge (PWA/service worker,
   versions de libs, quirks Android, capacités navigateur) → **ne pas deviner**,
   faire relayer une question précise à « Claude-avec-internet », puis appliquer.
 - **Git** : travail direct sur `main`, **Conventional Commits**, une intention à la
@@ -88,7 +89,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Fix cycle de vie fidèle P1 : bébé sans nuit (+ sieste official), sommeil par personnage, décroissance par stade, mode dev rééchelonné, noms français |
+| _(ce commit)_ | Décision : **pas de sync / Firebase / phase 2 abandonnés** — pets locaux distincts assumés (doc alignée) |
+| `2847063` | Fix cycle de vie fidèle P1 : bébé sans nuit (+ sieste official), sommeil par personnage, décroissance par stade, mode dev rééchelonné, noms français |
 | `895cdc0` | Toilettage passation : historique recalé sur les vrais hashes |
 | `cdf0918` | URL Pages validée sur le téléphone d'Alex |
 | `5807ab8` | Étape 6a : GitHub Pages activé, repo public → <https://hialexpopa-ux.github.io/Tama/> |
@@ -121,8 +123,8 @@ commit(s) Conventional + HANDOFF.md à jour dedans + push.
    → l'évolution « négligée » ne se déclenche naturellement qu'en mode official
    (les tests craftent l'état pour rester déterministes).
 2. ✅ **Store** (fait, `6289047`) — `src/store.js`, `createLocalStore(storage)` :
-   interface **async** `load()/save()/clear()` (pour que la bascule Firebase ne
-   change rien aux appelants), impl localStorage, corruption/version inconnue →
+   interface **async** `load()/save()/clear()` (garde l'app découplée de la
+   persistance ; l'async ne coûte rien même en localStorage), corruption/version inconnue →
    `null` (œuf neuf, jamais de crash). 5 tests (`test/store.test.js`, faux
    localStorage). `npm test` lance les deux suites : 31 tests, dernière valeur
    connue 31/31.
@@ -186,13 +188,17 @@ adult_3 23h→11h, adult_6 22h→10h), **décroissance faim/bonheur par stade**
 Glouton, Zigzag, Ronchon.
 
 **Reste à faire** : (a) observer une **vie complète** en mode dev (éclosion 30 s
-→ adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) confirmer
-l'installation Android à l'écran d'accueil ; (c) **Andy lanceur** (dans le repo
-d'Andy : ouvrir l'URL, ne jamais calculer) ; (d) les PNG d'Alex (sprites +
-icônes) quand il veut. ⚠️ Rappel : pets **distincts** par appareil/navigateur
-tant que la phase 2 (Firebase) n'existe pas.
+→ adulte ~30 min : évolutions, maladie, discipline, nuit) — _en cours, Alex
+regarde_ ; (b) confirmer l'installation Android à l'écran d'accueil ; (c) **Andy
+lanceur** (dans le repo d'Andy : ouvrir l'URL, ne jamais calculer) ; (d) les PNG
+d'Alex (sprites + icônes) quand il veut ; (e) **vivre une vraie partie en
+`MODE = 'official'`** (jamais éprouvé en conditions réelles, seulement en tests).
+✅ **Assumé** : pets **distincts** par appareil (pas de sync — voir ci-dessous).
 
-**Phase 2 (plus tard)** : `store.js` → Firebase, horloge serveur, un seul pet partout.
+**Pas de phase 2 / pas de Firebase (décision Alex, 2026-07-02).** La sync entre
+appareils est abandonnée : chaque porte a son propre pet local, et c'est très
+bien ainsi. On partage l'app + l'art (même URL, mêmes PNG), pas la vie du pet.
+→ La **phase 1 est l'architecture finale** ; le `store` reste `localStorage`.
 
 _Décisions actées : brief versionné dans le repo (copie Drive = breadcrumb seul) ;
 `WHERE-IS-THE-CODE.md` retiré du repo (il appartient au Drive) ; mode **Dev** par

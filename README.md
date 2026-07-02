@@ -19,11 +19,13 @@ santé est implicite (négliger le pet finit par le rendre malade, puis le tuer)
 Il n'existe **qu'une seule app : la PWA**. Hébergée à une URL, elle s'ouvre par trois portes —
 Andy (lanceur Electron), navigateur desktop, et Android (« ajouter à l'écran d'accueil »).
 Le **moteur** (`src/tama.js`) est du pur calcul d'état : aucun DOM, aucun réseau. La
-persistance passe par une interface `store` (locale en phase 1, **Firebase** en phase 2).
+persistance passe par une interface `store`, **locale à chaque appareil** : chaque porte
+a son propre pet (pas de synchronisation — choix assumé). Les trois portes partagent
+l'app et l'art, pas la vie du pet.
 
 ## Démarrer en local
 
-Un `file://` ne permet ni service worker ni Firebase — il faut un petit serveur statique :
+Un `file://` ne permet pas le service worker — il faut un petit serveur statique :
 
 ```bash
 # au choix
