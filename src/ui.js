@@ -231,13 +231,58 @@ async function boot() {
     if (!document.hidden) tickNow();
   });
 
-  // PWA : service worker pour l'offline (indisponible en file:// ou vieux
-  // navigateur → l'app marche quand même, juste sans cache hors-ligne).
-  try {
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-  } catch (e) {
-    console.warn('[tama] service worker non enregistré :', e);
-  }
+  // PWA : service worker (offline) + bandeau de mise à jour.
+  setupServiceWorker();
+}
+
+// ——— Service worker : offline + bandeau « nouvelle version » ———
+// Indisponible en file:// ou vieux navigateur → l'app marche quand même, sans
+// cache hors-ligne ni bandeau. La bascule vers la nouvelle version n'a lieu que
+// si l'utilisateur clique « Recharger » (jamais de rechargement surprise).
+function setupServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  const banner = $('update-banner');
+  const reloadBtn = $('update-reload');
+
+  // On ne recharge QUE suite à un clic « Recharger » : le flag évite le
+  // rechargement intempestif quand le tout premier SW prend le contrôle.
+  let updating = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (updating) location.reload();
+  });
+
+  const showUpdate = (worker) => {
+    if (!worker || !banner || !reloadBtn) return;
+    banner.hidden = false;
+    reloadBtn.onclick = () => {
+      updating = true;
+      banner.hidden = true;
+      worker.postMessage({ type: 'SKIP_WAITING' });
+    };
+  };
+
+  navigator.serviceWorker.register('./sw.js').then((reg) => {
+    // Une mise à jour attendait déjà (installée avant ce chargement) ?
+    if (reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting);
+
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (!nw) return;
+      nw.addEventListener('statechange', () => {
+        // « installed » + un contrôleur déjà là = vraie mise à jour (pas la
+        // première installation, où il n'y a encore rien à remplacer).
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+          showUpdate(reg.waiting ?? nw);
+        }
+      });
+    });
+
+    // Vérifie s'il y a du neuf au retour sur l'app (léger, non bloquant).
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) reg.update().catch(() => {});
+    });
+  }).catch((e) => console.warn('[tama] service worker non enregistré :', e));
 }
 
 boot();

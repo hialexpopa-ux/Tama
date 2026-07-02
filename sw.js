@@ -3,11 +3,19 @@
 //   - précache du shell à l'install ;
 //   - cache versionné, anciennes versions purgées à l'activation ;
 //   - fetch en stale-while-revalidate (on sert le cache tout de suite, on
-//     rafraîchit en arrière-plan) → les mises à jour arrivent au rechargement
-//     suivant, sans étape de build ni bump manuel obligatoire.
-// Bumper CACHE_VERSION force un re-précache complet (utile si on veut être sûr).
+//     rafraîchit en arrière-plan).
+//
+// Mise à jour EXPLICITE (bandeau « Recharger », cf. ui.js) : à l'install on NE
+// fait PLUS skipWaiting() — un nouveau SW reste donc en attente (« waiting »)
+// tant que la page ne lui envoie pas le message SKIP_WAITING. C'est ce qui
+// permet à l'UI de prévenir l'utilisateur avant de basculer, au lieu d'un
+// changement silencieux qui n'apparaît qu'au 2e rechargement.
+//
+// ⚠️ CONVENTION : **bumper CACHE_VERSION à chaque déploiement** qu'on veut
+// signaler. Le navigateur ne détecte une nouvelle version QUE si sw.js change
+// d'octets — ce bump est donc le déclencheur du bandeau (et re-précache le shell).
 
-const CACHE_VERSION = 'tama-v1';
+const CACHE_VERSION = 'tama-v2';
 
 const PRECACHE = [
   './',
@@ -26,11 +34,17 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Pas de skipWaiting() ici : le nouveau SW attend le feu vert de la page.
+  // (À la toute première install — aucun SW actif — il s'active quand même
+  //  immédiatement : l'état « waiting » n'existe que s'il y a un SW à remplacer.)
   event.waitUntil(
-    caches.open(CACHE_VERSION)
-      .then((cache) => cache.addAll(PRECACHE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_VERSION).then((cache) => cache.addAll(PRECACHE))
   );
+});
+
+// La page (ui.js) demande la bascule quand l'utilisateur clique « Recharger ».
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

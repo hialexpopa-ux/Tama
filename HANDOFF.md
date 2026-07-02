@@ -89,7 +89,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Décision : **pas de sync / Firebase / phase 2 abandonnés** — pets locaux distincts assumés (doc alignée) |
+| _(ce commit)_ | Mise à jour auto de la PWA : bandeau « Nouvelle version — Recharger » (SW en attente + `SKIP_WAITING`) ; convention bump `CACHE_VERSION` |
+| `5f11936` | Décision : **pas de sync / Firebase / phase 2 abandonnés** — pets locaux distincts assumés (doc alignée) |
 | `2847063` | Fix cycle de vie fidèle P1 : bébé sans nuit (+ sieste official), sommeil par personnage, décroissance par stade, mode dev rééchelonné, noms français |
 | `895cdc0` | Toilettage passation : historique recalé sur les vrais hashes |
 | `cdf0918` | URL Pages validée sur le téléphone d'Alex |
@@ -193,6 +194,9 @@ regarde_ ; (b) confirmer l'installation Android à l'écran d'accueil ; (c) **An
 lanceur** (dans le repo d'Andy : ouvrir l'URL, ne jamais calculer) ; (d) les PNG
 d'Alex (sprites + icônes) quand il veut ; (e) **vivre une vraie partie en
 `MODE = 'official'`** (jamais éprouvé en conditions réelles, seulement en tests).
+✅ **Mise à jour auto faite** : bandeau « Nouvelle version — Recharger » (SW en
+attente + `SKIP_WAITING`). ⚠️ **Bumper `CACHE_VERSION` (sw.js) à chaque
+déploiement** qu'on veut signaler — c'est le déclencheur du bandeau.
 ✅ **Assumé** : pets **distincts** par appareil (pas de sync — voir ci-dessous).
 
 **Pas de phase 2 / pas de Firebase (décision Alex, 2026-07-02).** La sync entre

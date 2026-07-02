@@ -6,6 +6,14 @@ Versionnage sémantique.
 
 ## [Non publié]
 
+### Ajouté
+- **Mise à jour auto de la PWA** : le service worker n'active plus la nouvelle
+  version en douce (plus de `skipWaiting()` à l'install → il attend). L'app
+  détecte la version en attente et affiche un **bandeau « Nouvelle version —
+  Recharger »** ; au clic, elle bascule (`SKIP_WAITING` → `controllerchange` →
+  reload). Fini le « recharger deux fois sans savoir ». Convention associée :
+  **bumper `CACHE_VERSION` à chaque déploiement** qu'on veut signaler.
+
 ### Corrigé
 - **Cycle de vie fidèle P1** (bug : bébé « endormi » dès l'éclosion le matin →
   âge qui monte mais rien ne bouge, recoupé avec les données réelles du P1) :

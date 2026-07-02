@@ -121,6 +121,23 @@
       position: absolute; bottom: 4px; left: 8px;
       font-size: 10px; opacity: .55; z-index: 1;
     }
+
+    /* Bandeau « nouvelle version » (mise à jour de la PWA, cf. ui.js) */
+    #update-banner {
+      position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+      z-index: 10;
+      display: flex; align-items: center; gap: 12px;
+      background: var(--shell-dark); color: #fff;
+      padding: 10px 14px; border-radius: 12px;
+      font-size: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
+    }
+    #update-banner[hidden] { display: none; }
+    #update-banner button {
+      font: inherit; font-weight: 600;
+      padding: 6px 12px; border: 0; border-radius: 8px;
+      background: #ffd166; color: var(--pixel); cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -151,6 +168,12 @@
       <button id="btn-discipline" title="Discipline">📢</button>
     </div>
   </main>
+
+  <div id="update-banner" hidden>
+    <span>Nouvelle version disponible</span>
+    <button id="update-reload">Recharger</button>
+  </div>
+
   <script type="module" src="src/ui.js"></script>
 </body>
 </html>
