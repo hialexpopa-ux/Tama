@@ -15,7 +15,7 @@
 // signaler. Le navigateur ne détecte une nouvelle version QUE si sw.js change
 // d'octets — ce bump est donc le déclencheur du bandeau (et re-précache le shell).
 
-const CACHE_VERSION = 'tama-v4';
+const CACHE_VERSION = 'tama-v5';
 
 const PRECACHE = [
   './',

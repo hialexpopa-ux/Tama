@@ -91,7 +91,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md · ASSETS.md (brief d'art :
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | **Doctrine design gravée** : « toute nouveauté habille le P1 » (README wording public prudent, doctrine `CLAUDE.md`, §7 enrichie, nouveau `ASSETS.md`). Docs seulement, moteur intact |
+| _(ce commit)_ | **Résumé d'absence en 3 tons** (grave/moyen/neutre, gras+atténué) — UI seulement (`ui.js` + CSS), moteur intact ; ligne « réclame ton attention » retirée ; wording public `index.html` ; bump `CACHE_VERSION` v5 |
+| `5580eeb` | **Doctrine design gravée** : « toute nouveauté habille le P1 » (README wording public prudent, doctrine `CLAUDE.md`, §7 enrichie, nouveau `ASSETS.md`). Docs seulement, moteur intact |
 | `e22c492` | Docs : spec traçable des blocs B (thèmes) et C (saveur narrative) — critères de « c'est bien fait » (§7) |
 | `d38bd66` | chore : `CACHE_VERSION` → `tama-v4` (signaler le résumé d'absence aux installs existantes) |
 | `6d69fd0` | **Bloc A — Résumé d'absence** : fonction pure `absenceSummary(before,after)` (diff, +4 tests) + modale « Pendant ton absence… » dans `ui.js` (non punitive) + raccourci `?ago=N`. Fidèle P1, moteur inchangé |
@@ -341,11 +342,13 @@ cœurs sont pleins).
 (nouveau), `src/ui.js` (affichage), éventuellement une fonction pure de sélection
 dans `src/tama.js` (**pure, sans effet de bord**) + son test dans `test/tama.test.js`.
 
-### Raffinement prévu — résumé d'absence en 3 tons (Bloc A déjà livré)
+### Raffinement — résumé d'absence en 3 tons ✅ (livré, ce commit)
 
-Bloc A (`6d69fd0`) narre déjà des **états observables** ; prochaine passe : les
-**hiérarchiser en 3 tons**, toujours sur l'état **visible** (jamais le scoring
-caché). Doctrine :
+Le résumé hiérarchise désormais les **états observables** en **3 tons** (gras pour
+grave, atténué pour neutre — sobre, compatible LCD monochrome), UI seulement
+(`ui.js` + CSS `index.html`, moteur intact). Ligne rouge tenue : l'ancienne ligne
+« il réclame ton attention » a été **retirée** (trop proche d'une narration
+d'appel). Doctrine appliquée :
 - **grave** : « Il est tombé malade. » / « Il avait très faim. » / « Il dort
   encore, épuisé. »
 - **moyen** : « Un caca est apparu. » / « Ses cœurs ont baissé. » / « La lumière

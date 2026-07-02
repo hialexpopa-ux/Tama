@@ -7,6 +7,15 @@ Versionnage sémantique.
 ## [Non publié]
 
 ### Ajouté
+- **Résumé d'absence en 3 tons** : le récap « Pendant ton absence… » hiérarchise
+  désormais les états **observables** en *grave* (gras : tombé malade / avait très
+  faim), *moyen* (caca / cœurs baissés / lumière restée allumée / a grandi) et
+  *neutre* (atténué : dort paisiblement / t'attendait). Rendu sobre compatible LCD
+  monochrome (poids + opacité, pas de couleur). **UI seulement** (`ui.js` + CSS
+  `index.html`), moteur intact. Ligne rouge tenue : jamais d'appel manqué, de care
+  mistake ni de raison d'évolution ; l'ancienne ligne « il réclame ton attention »
+  (trop proche d'une narration d'appel) est retirée. Wording public aussi corrigé
+  dans la meta description de `index.html`.
 - **Doctrine design gravée + brief d'art** (suite à une critique d'un web/game
   designer, 2026-07-02) : **« toute nouveauté habille le P1, elle ne le remplace
   pas »** (listes Oui/Non, frontière *écran LCD = PNG* / *coque = CSS thémable*,

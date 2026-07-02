@@ -184,29 +184,41 @@ function formatAway(min) {
   return h < 36 ? `${Math.round(h)} h` : `${Math.round(h / 24)} jour(s)`;
 }
 
+// 3 tons hiérarchisés (doctrine HANDOFF §7). RÈGLE ROUGE : on ne raconte que des
+// états OBSERVABLES. Jamais les appels manqués, les care mistakes ni la raison
+// d'évolution — le mystère du P1 fait partie du jeu. (`f` = faits du moteur,
+// `after` = état courant pour lire faim critique / sommeil / lumière.)
 function maybeShowAbsenceRecap(before, after, elapsedMin) {
   if (!after.alive) return;                    // la mort a son propre écran
   if (elapsedMin < RECAP_MIN_ELAPSED) return;  // absence trop courte
   const f = T.absenceSummary(before, after);
-  const lines = [];
-  if (f.evolvedTo) lines.push(`${after.name} a grandi : le voilà <b>${CHAR_NAME[f.evolvedTo] ?? '?'}</b> !`);
-  if (f.agedYears > 0) lines.push(`Il a pris ${f.agedYears} an(s).`);
-  if (f.hungerLost > 0 || f.happinessLost > 0) lines.push('Ses cœurs ont un peu baissé.');
-  if (f.poopNow) lines.push('Il y a un petit caca à nettoyer.');
-  if (f.sickNow) lines.push('Il ne se sent pas très bien…');
-  if (f.misbehaving) lines.push('Il réclame ton attention.');
-  if (f.asleep) lines.push('Chut… il dort paisiblement.');
+  const grave = [], moyen = [], neutre = [];
 
-  if (lines.length === 0) {
+  // Grave — état visible qui appelle une action maintenant
+  if (f.sickNow) grave.push('Il est tombé malade.');
+  if (after.hunger === 0) grave.push('Il avait très faim.');
+
+  // Moyen — petits accidents / croissance
+  if (f.poopNow) moyen.push('Un caca est apparu.');
+  if (after.hunger > 0 && (f.hungerLost > 0 || f.happinessLost > 0)) moyen.push('Ses cœurs ont baissé.');
+  if (after.flags.asleep && after.flags.lightOn) moyen.push('La lumière est restée allumée.');
+  if (f.evolvedTo) moyen.push(`Il a grandi : le voilà ${CHAR_NAME[f.evolvedTo] ?? '?'}.`);
+  else if (f.agedYears > 0) moyen.push(`Il a pris ${f.agedYears} an(s).`);
+
+  // Neutre — rien d'alarmant (« dort paisiblement » n'a de sens que sans souci grave)
+  if (f.asleep && grave.length === 0) neutre.push('Chut… il dort paisiblement.');
+
+  if (grave.length + moyen.length + neutre.length === 0) {
     if (elapsedMin < RECAP_BARE_ELAPSED) return; // rien de notable + absence brève
-    lines.push('Il t\'attendait bien sagement.');
+    neutre.push('Il t\'attendait bien sagement.');
   }
 
+  const render = (arr, cls) => arr.map((t) => `<p class="meter-line ${cls}">${t}</p>`).join('');
   const m = openModal(`
     <h2>Pendant ton absence…</h2>
     <div class="big"></div>
-    <p class="meter-line">${formatAway(elapsedMin)} loin de toi.</p>
-    ${lines.map((l) => `<p class="meter-line">${l}</p>`).join('')}
+    <p class="meter-line tone-neutre">${formatAway(elapsedMin)} loin de toi.</p>
+    ${render(grave, 'tone-grave')}${render(moyen, 'tone-moyen')}${render(neutre, 'tone-neutre')}
     <div class="row"><button id="r-close">Coucou !</button></div>`);
   face(m.querySelector('.big'), petArt(after.character), CHAR_FACE[after.character] ?? '❓');
   m.querySelector('#r-close').onclick = closeModal;
