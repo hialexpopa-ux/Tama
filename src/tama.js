@@ -87,10 +87,19 @@ export function toLocalIso(ms) {
     `T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
 }
 
-function isSleepHour(stage, hour) {
-  const w = C.sleep[stage];
-  if (!w) return false; // l'œuf ne dort pas
+// Sommeil nocturne par PERSONNAGE (fidèle P1) : œuf et bébé n'ont pas d'entrée
+// dans C.sleep → jamais endormis la nuit.
+function isSleepHour(character, hour) {
+  const w = C.sleep[character];
+  if (!w) return false;
   return w.start > w.end ? (hour >= w.start || hour < w.end) : (hour >= w.start && hour < w.end);
+}
+
+// Micro-sieste du bébé (vrai P1 : 5 min de sommeil à la 40e minute du stade).
+function inBabyNap(s) {
+  const nap = C.babyNap;
+  return !!nap && s.stage === 'baby'
+    && s.timers.stage >= nap.atMin && s.timers.stage < nap.atMin + nap.durationMin;
 }
 
 // Palier de retombée entre deux stades : 100→50, 75→25, 50→25, 25→0.
@@ -194,7 +203,7 @@ function stepOnce(s, stepMin, simMs, rand) {
   s.ageYears = Math.floor(s.timers.age / C.ageDayMin);
   s.timers.stage += stepMin;
 
-  const asleep = isSleepHour(s.stage, localHour(simMs));
+  const asleep = isSleepHour(s.character, localHour(simMs)) || inBabyNap(s);
   s.flags.asleep = asleep;
 
   if (asleep) {
@@ -213,15 +222,15 @@ function stepOnce(s, stepMin, simMs, rand) {
     s.timers.lightSleep = 0;
     s.counted.light = false;
 
-    // Décroissance faim / bonheur
+    // Décroissance faim / bonheur (taux propre au stade — le bébé est vorace)
     s.timers.hunger += stepMin;
-    while (s.timers.hunger >= C.hungerDecayMin) {
-      s.timers.hunger -= C.hungerDecayMin;
+    while (s.timers.hunger >= C.hungerDecayMin[s.stage]) {
+      s.timers.hunger -= C.hungerDecayMin[s.stage];
       s.hunger = Math.max(0, s.hunger - 1);
     }
     s.timers.happy += stepMin;
-    while (s.timers.happy >= C.happinessDecayMin) {
-      s.timers.happy -= C.happinessDecayMin;
+    while (s.timers.happy >= C.happinessDecayMin[s.stage]) {
+      s.timers.happy -= C.happinessDecayMin[s.stage];
       s.happiness = Math.max(0, s.happiness - 1);
     }
 

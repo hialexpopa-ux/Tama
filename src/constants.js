@@ -23,13 +23,21 @@ const SHARED = {
   weight: { mealGain: 1, snackGain: 2, playLoss: 1, max: 99 },
   baseWeight: { baby: 5, child: 10, teen: 20, adult: 30 },
 
-  // Sommeil par stade (heures locales ; approximation P1, réglable).
-  // Endormi : décroissances/appels gelés ; lumière allumée = care mistake.
+  // Sommeil nocturne PAR PERSONNAGE (fidèle P1 : chaque forme a son propre
+  // rythme — source thaao.net/tama/p1). Heures locales. Endormi : décroissances
+  // et appels gelés ; lumière allumée = care mistake.
+  // ŒUF et BÉBÉ absents VOLONTAIREMENT : sur le vrai P1, Babytchi ne dort
+  // jamais la nuit — il vit son stade d'une traite (+ micro-sieste, cf. babyNap).
   sleep: {
-    baby:  { start: 20, end: 9 },
-    child: { start: 21, end: 9 },
-    teen:  { start: 22, end: 9 },
-    adult: { start: 22, end: 9 },
+    child:     { start: 20, end: 9 },  // Bouboule (Marutchi)
+    teen_good: { start: 21, end: 9 },  // Mignon (Tamatchi)
+    teen_bad:  { start: 21, end: 9 },  // Boudeur (Kuchitamatchi)
+    adult_1:   { start: 22, end: 9 },  // Malin (Mametchi)
+    adult_2:   { start: 22, end: 9 },  // Peinard (Ginjirotchi)
+    adult_3:   { start: 23, end: 11 }, // Noctambule (Maskutchi), couche-tard
+    adult_4:   { start: 22, end: 9 },  // Glouton (Kuchipatchi)
+    adult_5:   { start: 22, end: 9 },  // Zigzag (Nyorotchi)
+    adult_6:   { start: 22, end: 10 }, // Ronchon (Tarakotchi), grasse matinée
   },
 
   // Évolution (TAMA-START §4) : 0-1 care mistakes au stade enfant → « bon » ado ;
@@ -54,10 +62,13 @@ const SHARED = {
 // ——— Spécifiques au mode ———
 const OFFICIAL = {
   eggHatchMin: 5,                       // éclosion ~5 min
-  stageMin: { baby: 60, child: 24 * 60, teen: 48 * 60 }, // durée de chaque stade
-  hungerDecayMin: 60,                   // 1 cœur de faim perdu toutes les X min
-  happinessDecayMin: 70,                // (le P1 accélère avec l'âge, cap 6/7 min
-                                        //  pour un vieil adulte — non modélisé)
+  stageMin: { baby: 65, child: 24 * 60, teen: 48 * 60 }, // bébé : 65 min mesurées sur le vrai P1
+  babyNap: { atMin: 40, durationMin: 5 }, // micro-sieste du bébé (mesurée sur le vrai P1)
+  // Décroissance PAR STADE : le bébé du vrai P1 perd 1 cœur de faim / 3 min et
+  // 1 cœur de bonheur / 4 min (mesuré) ; les stades suivants sont approximés
+  // (le P1 accélère avec l'âge — non modélisé).
+  hungerDecayMin:    { baby: 3, child: 60, teen: 60, adult: 60 },
+  happinessDecayMin: { baby: 4, child: 70, teen: 70, adult: 70 },
   poopIntervalMin: 180,                 // un caca toutes les X min (éveillé)
   poopSickMin: 120,                     // rester X min dans son caca → malade
   misbehaveChancePerHour: 0.25,         // espérance d'appels discipline
@@ -68,16 +79,19 @@ const OFFICIAL = {
   oldAgeDeathChancePerDay: 0.25,
 };
 
+// Mode dev = OBSERVER une vie complète en ~30 min : tout doit se manifester
+// (faim, bonheur, caca, maladie, discipline) pendant qu'on regarde.
 const DEV = {
   eggHatchMin: 0.5,                     // 30 s
   stageMin: { baby: 2, child: 10, teen: 15 },
-  hungerDecayMin: 180,                  // rythme « 2-3 soins/jour »
-  happinessDecayMin: 210,
-  poopIntervalMin: 45,
-  poopSickMin: 60,
+  babyNap: null,                        // stade bébé de 2 min : pas la place pour la sieste
+  hungerDecayMin:    { baby: 1, child: 2, teen: 3, adult: 4 },
+  happinessDecayMin: { baby: 1.5, child: 2.5, teen: 3.5, adult: 5 },
+  poopIntervalMin: 5,
+  poopSickMin: 15,
   misbehaveChancePerHour: 4,            // fréquent, pour pouvoir tester la discipline
-  sickDeathMin: 120,
-  starveDeathMin: 240,
+  sickDeathMin: 30,
+  starveDeathMin: 45,
   ageDayMin: 15,                        // 15 min = 1 « année » tama
   oldAgeYears: 10,
   oldAgeDeathChancePerDay: 0.25,

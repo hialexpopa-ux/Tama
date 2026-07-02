@@ -25,6 +25,17 @@ const CHAR_FACE = {
   adult_4: '🦉', adult_5: '🦩', adult_6: '🦃',
   dead: '👼',
 };
+// Noms français des formes (affichage seul — les ids de slot ne changent pas).
+// Clin d'œil aux personnages officiels du P1 : Babytchi, Marutchi, Tamatchi,
+// Kuchitamatchi, puis Mametchi, Ginjirotchi, Maskutchi, Kuchipatchi, Nyorotchi,
+// Tarakotchi.
+const CHAR_NAME = {
+  egg: 'Œuf', baby: 'Poussin', child: 'Bouboule',
+  teen_good: 'Mignon', teen_bad: 'Boudeur',
+  adult_1: 'Malin', adult_2: 'Peinard', adult_3: 'Noctambule',
+  adult_4: 'Glouton', adult_5: 'Zigzag', adult_6: 'Ronchon',
+  dead: 'Ange',
+};
 const NEED_ICON = { hunger: '🍚', happy: '🎮', sick: '💊', poop: '🧹', discipline: '📢' };
 const DEATH_LABEL = {
   starvation: 'mort de faim…', sickness: 'emporté par la maladie…', 'old-age': 'parti de vieillesse.',
@@ -148,6 +159,7 @@ function showMeter() {
   const m = openModal(`
     <h2>Santé</h2>
     <div class="big"></div>
+    <p class="meter-line">Forme : ${CHAR_NAME[state.character] ?? '?'}</p>
     <p class="meter-line">Faim : ${heartsRow(su.hunger)}</p>
     <p class="meter-line">Bonheur : ${heartsRow(su.happiness)}</p>
     <p class="meter-line">Discipline : ${su.discipline}%</p>

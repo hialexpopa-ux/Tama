@@ -65,6 +65,18 @@ function craft(over = {}) {
   return s;
 }
 
+// Tout soigner SAUF nourrir — isole la fenêtre de care mistake de la faim
+// (depuis les taux par stade, le mode dev fait aussi décroître le bonheur et
+// apparaître caca/maladie pendant ces scénarios).
+function tendNoFood(x) {
+  if (!x.alive || x.flags.asleep) return x;
+  if (x.flags.poop) x = T.clean(x);
+  while (x.flags.sick) { const n = T.heal(x); if (n === x) break; x = n; }
+  if (x.flags.misbehaving) x = T.scold(x);
+  while (x.happiness < C.heartsMax) { const n = T.play(x, C.gameRounds); if (n === x) break; x = n; }
+  return x;
+}
+
 function hatchedBaby() {
   const egg = T.createEgg(localIso(START));
   return T.tick(egg, C.eggHatchMin + 1, localIso(START + (C.eggHatchMin + 1) * 60000), T.makeRand('hatch'));
@@ -161,20 +173,20 @@ test('bêtise : il refuse repas et jeu tant qu\'on ne l\'a pas grondé', () => {
 // ——— Care mistakes ———
 test('care mistake : appel faim ignoré 15 min → 1 erreur, comptée une seule fois', () => {
   let s = craft({ hunger: 0 });
-  ({ state: s } = simulate(s, C.careMistakeWindowMin + 10));
+  ({ state: s } = simulate(s, C.careMistakeWindowMin + 10, { careFn: tendNoFood }));
   assert.equal(s.careMistakes, 1);
   assert.equal(s.attention, 'hunger');
-  ({ state: s } = simulate(s, 10, { startMs: START + (C.careMistakeWindowMin + 10) * 60000 }));
+  ({ state: s } = simulate(s, 10, { startMs: START + (C.careMistakeWindowMin + 10) * 60000, careFn: tendNoFood }));
   assert.equal(s.careMistakes, 1); // pas de double comptage du même appel
 });
 
 test('care mistake : nourrir referme la fenêtre, la suivante recompte', () => {
   let s = craft({ hunger: 0 });
-  ({ state: s } = simulate(s, C.careMistakeWindowMin + 5));
+  ({ state: s } = simulate(s, C.careMistakeWindowMin + 5, { careFn: tendNoFood }));
   assert.equal(s.careMistakes, 1);
   s = T.feed(s, 'meal'); // besoin résolu
   s = { ...s, hunger: 0 }; // la faim retombe (raccourci de test)
-  ({ state: s } = simulate(s, C.careMistakeWindowMin + 5, { startMs: START + 60 * 60000 }));
+  ({ state: s } = simulate(s, C.careMistakeWindowMin + 5, { startMs: START + 60 * 60000, careFn: tendNoFood }));
   assert.equal(s.careMistakes, 2);
 });
 
@@ -222,7 +234,9 @@ test('affamé trop longtemps → mort (cause starvation)', () => {
 test('enfant → ado : 0-1 erreurs = bon ado, 2+ = moins bon', () => {
   for (const [mistakes, expected] of [[0, 'teen_good'], [1, 'teen_good'], [2, 'teen_bad'], [5, 'teen_bad']]) {
     let s = craft({ stage: 'child', character: 'child', careMistakes: mistakes, timers: { stage: C.stageMin.child } });
-    s = T.tick(s, C.tickSubstepMin, localIso(START + C.tickSubstepMin * 60000), T.makeRand('evo'));
+    // 1 min suffit (le stade est déjà mûr) : un tick de 15 min viderait les
+    // cœurs en mode dev et fausserait le compte d'erreurs à l'évolution.
+    s = T.tick(s, 1, localIso(START + 60000), T.makeRand('evo'));
     assert.equal(s.stage, 'teen');
     assert.equal(s.character, expected, `${mistakes} erreurs → ${expected}`);
     assert.equal(s.careMistakes, 0); // compteur remis à zéro par stade
@@ -271,6 +285,37 @@ test('nuit : il dort, refuse les actions, lumière allumée = 1 care mistake', (
   const before = s.careMistakes;
   ({ state: s } = simulate(s, 60, { startMs: NIGHT + (C.careMistakeWindowMin + 10) * 60000 }));
   assert.equal(s.careMistakes, before); // plus d'erreur une fois la lumière éteinte
+});
+
+// Régression (bug du 2026-07-02) : le bébé « dormait » toute la matinée →
+// âge qui monte mais rien ne bouge. Fidèle P1 : Babytchi ne dort JAMAIS la nuit.
+test('bébé : éveillé même la nuit — les cœurs bougent et il évolue', () => {
+  let s = craft({ stage: 'baby', character: 'baby', hunger: C.heartsMax, happiness: C.heartsMax });
+  ({ state: s } = simulate(s, C.hungerDecayMin.baby + 0.25, { startMs: NIGHT, stepMin: 0.25 }));
+  assert.equal(s.flags.asleep, false);
+  assert.ok(s.hunger < C.heartsMax, 'la faim décroît la nuit aussi');
+  let ready = craft({ stage: 'baby', character: 'baby', timers: { stage: C.stageMin.baby } });
+  ready = T.tick(ready, 1, localIso(NIGHT + 60000), T.makeRand('night-evo'));
+  assert.equal(ready.stage, 'child', 'l\'évolution n\'attend pas le matin');
+});
+
+test('sommeil par personnage : le Noctambule veille à 22h30 et dort à 10h', () => {
+  const at2230 = Date.parse('2026-07-01T22:30:00');
+  const at10 = Date.parse('2026-07-02T10:00:00');
+  const tickAt = (character, ms) =>
+    T.tick(craft({ character }), 1, localIso(ms + 60000), T.makeRand('sleep'));
+  assert.equal(tickAt('adult_1', at2230).flags.asleep, true);  // Malin dort dès 22 h
+  assert.equal(tickAt('adult_3', at2230).flags.asleep, false); // Noctambule veille jusqu'à 23 h
+  assert.equal(tickAt('adult_1', at10).flags.asleep, false);   // Malin est debout dès 9 h
+  assert.equal(tickAt('adult_3', at10).flags.asleep, true);    // Noctambule dort jusqu'à 11 h
+});
+
+if (C.babyNap) test('official : micro-sieste du bébé (5 min à la 40e minute)', () => {
+  let s = craft({ stage: 'baby', character: 'baby', timers: { stage: C.babyNap.atMin } });
+  s = T.tick(s, 1, localIso(START + 60000), T.makeRand('nap'));
+  assert.equal(s.flags.asleep, true);
+  s = T.tick(s, C.babyNap.durationMin, localIso(START + (1 + C.babyNap.durationMin) * 60000), T.makeRand('nap'));
+  assert.equal(s.flags.asleep, false);
 });
 
 test('nuit : décroissances gelées (les cœurs ne bougent pas en dormant)', () => {

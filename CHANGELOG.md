@@ -6,7 +6,22 @@ Versionnage sémantique.
 
 ## [Non publié]
 
+### Corrigé
+- **Cycle de vie fidèle P1** (bug : bébé « endormi » dès l'éclosion le matin →
+  âge qui monte mais rien ne bouge, recoupé avec les données réelles du P1) :
+  - le **bébé ne dort plus jamais la nuit** (fidèle Babytchi : stade vécu d'une
+    traite) ; en mode official il fait la **micro-sieste** du vrai P1 (5 min à
+    la 40e minute) et son stade dure 65 min (mesuré) ;
+  - **sommeil par personnage** (plus par stade) : Bouboule 20h→9h, ados 21h→9h,
+    adultes 22h→9h, Noctambule 23h→11h, Ronchon 22h→10h ;
+  - **décroissance faim/bonheur par stade** (official : bébé 3/4 min comme le
+    vrai P1) ; **mode dev rééchelonné** pour qu'une vie de ~30 min montre tout
+    (faim, bonheur, caca, maladie, discipline).
+
 ### Ajouté
+- **Noms français des formes** (affichés dans l'écran Santé) : Poussin, Bouboule,
+  Mignon/Boudeur, puis Malin, Peinard, Noctambule, Glouton, Zigzag, Ronchon.
+- 3 tests de régression sommeil/sieste (28 tests moteur en dev, 29 en official).
 - **Étape 5 — PWA installable** : `manifest.webmanifest` (192/512 + maskable),
   `sw.js` (précache, cache versionné, stale-while-revalidate), enregistrement
   dans `ui.js`, icônes générées par `tools/make-icons.mjs` (Node pur).

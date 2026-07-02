@@ -46,7 +46,7 @@ ado→adulte, sommeil/caca/maladie en **flags**, santé implicite. **Pas de stat
 
 ```powershell
 # Tester le moteur en Node (aucune UI, zéro dépendance)
-npm test             # 26 tests moteur + 5 tests store, mode dev ET official
+npm test             # 28 tests moteur (29 en official) + 5 store, verts dans les DEUX modes
 
 # Servir la PWA en local (service worker + Firebase impossibles en file://)
 npm start            # = node tools/serve.mjs  → http://localhost:8000
@@ -88,7 +88,8 @@ CLAUDE.md · CHANGELOG.md · README.md · HANDOFF.md
 
 | Commit | Quoi |
 | --- | --- |
-| _(ce commit)_ | Toilettage passation : historique recalé sur les vrais hashes |
+| _(ce commit)_ | Fix cycle de vie fidèle P1 : bébé sans nuit (+ sieste official), sommeil par personnage, décroissance par stade, mode dev rééchelonné, noms français |
+| `895cdc0` | Toilettage passation : historique recalé sur les vrais hashes |
 | `cdf0918` | URL Pages validée sur le téléphone d'Alex |
 | `5807ab8` | Étape 6a : GitHub Pages activé, repo public → <https://hialexpopa-ux.github.io/Tama/> |
 | `367bcec` | Validation navigateur d'Alex : offline + installation desktop OK |
@@ -170,6 +171,19 @@ Pages, repo public — chaque `git push` sur `main` redéploie tout seul).
 **Android (2026-07-01)** : l'URL Pages **s'ouvre et marche sur le téléphone
 d'Alex** ✅ — reste à confirmer l'« Ajouter à l'écran d'accueil » (icône œuf +
 plein écran + offline).
+
+**Fix cycle de vie (2026-07-02, recoupé avec les données réelles du P1 —
+thaao.net/tama/p1 + mesures d'un P1 original)** : le bébé « dormait » 20h→9h dès
+l'éclosion → tout gelé sauf l'âge (bug vu par Alex un matin). Corrigé : **bébé
+sans sommeil nocturne** (fidèle Babytchi ; en official : stade de 65 min +
+micro-sieste 5 min à la 40e min, `C.babyNap`), **sommeil par personnage**
+(`C.sleep` indexé par `character` : child 20h→9h, ados 21h→9h, adultes 22h→9h,
+adult_3 23h→11h, adult_6 22h→10h), **décroissance faim/bonheur par stade**
+(official bébé : 3/4 min, mesuré) et **mode dev rééchelonné** pour qu'une vie de
+~30 min montre tout (faim 1-4 min, caca 5 min, maladie mortelle 30 min…).
+**Noms français** des formes affichés dans l'écran Santé (`CHAR_NAME` dans
+`ui.js`) : Poussin, Bouboule, Mignon/Boudeur, Malin, Peinard, Noctambule,
+Glouton, Zigzag, Ronchon.
 
 **Reste à faire** : (a) observer une **vie complète** en mode dev (éclosion 30 s
 → adulte ~30 min : évolutions, maladie, discipline, nuit) ; (b) confirmer
